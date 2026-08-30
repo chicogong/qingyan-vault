@@ -142,17 +142,21 @@ class QingyanHomepageView extends ItemView {
     const projectTasks = await this.collectProjectTasks();
 
     this.renderHeader(root);
-    this.renderQuickActions(root);
-    this.renderStats(root, files, inboxFiles, projectTasks);
+    this.renderHero(root, files, inboxFiles, projectTasks);
+    this.renderKnowledgeCurrent(root, files, inboxFiles, projectTasks);
 
-    const grid = root.createDiv({ cls: "qy-dashboard-grid" });
-    const primary = grid.createDiv({ cls: "qy-dashboard-column qy-dashboard-primary" });
-    const secondary = grid.createDiv({ cls: "qy-dashboard-column qy-dashboard-secondary" });
+    const workbench = root.createDiv({ cls: "qy-dashboard-grid qy-dashboard-workbench" });
+    const primary = workbench.createDiv({ cls: "qy-dashboard-column qy-dashboard-primary" });
+    const secondary = workbench.createDiv({ cls: "qy-dashboard-column qy-dashboard-secondary" });
 
-    this.renderFileSection(primary, "最近编辑", "你刚刚留下的工作痕迹", recent, "history");
     this.renderTaskSection(primary, projectTasks);
-    this.renderFileSection(secondary, "Inbox", "还没决定去向的线索", inboxFiles, "inbox");
-    this.renderFileSection(secondary, "重新遇见", "让旧知识回到眼前", revisit, "sparkles");
+    this.renderFileSection(secondary, "最近痕迹", "刚刚发生过的编辑", recent, "history");
+
+    const library = root.createDiv({ cls: "qy-dashboard-grid qy-dashboard-library" });
+    const inbox = library.createDiv({ cls: "qy-dashboard-column" });
+    const resurfacing = library.createDiv({ cls: "qy-dashboard-column" });
+    this.renderFileSection(inbox, "Inbox", "尚未决定去向", inboxFiles, "inbox");
+    this.renderFileSection(resurfacing, "重新遇见", "让旧知识回到眼前", revisit, "sparkles");
 
     const footer = root.createDiv({ cls: "qy-dashboard-footer" });
     footer.createSpan({ text: "LOCAL MARKDOWN" });
@@ -164,58 +168,73 @@ class QingyanHomepageView extends ItemView {
 
   renderHeader(root) {
     const now = new Date();
-    const header = root.createEl("header", { cls: "qy-dashboard-header" });
-    const brandRow = header.createDiv({ cls: "qy-brand-row" });
-    const brand = brandRow.createDiv({ cls: "qy-brand" });
-    brand.createSpan({ cls: "qy-brand-mark", text: "Q" });
+    const header = root.createEl("header", { cls: "qy-dashboard-header qy-brand-row" });
+    const brand = header.createDiv({ cls: "qy-brand" });
+    brand.createSpan({ cls: "qy-brand-mark", text: "砚" });
     const brandText = brand.createDiv();
     brandText.createEl("strong", { text: PRODUCT_NAME });
     brandText.createSpan({ text: "Agent-native Obsidian Vault" });
 
-    const time = brandRow.createDiv({ cls: "qy-dashboard-time" });
+    const time = header.createDiv({ cls: "qy-dashboard-time" });
     time.createEl("strong", { text: formatClock(now), attr: { "data-qy-clock": "" } });
     time.createSpan({ text: formatDate(now), attr: { "data-qy-date": "" } });
+  }
 
-    const statement = header.createDiv({ cls: "qy-dashboard-statement" });
-    statement.createSpan({ text: greetingFor(now) });
-    statement.createEl("h1", { text: "今天从哪一条线索开始？" });
-    statement.createEl("p", {
-      text: "捕捉一件事，推进一个结果，或让一条旧知识重新产生作用。",
+  renderHero(root, files, inboxFiles, projectTasks) {
+    const hero = root.createEl("section", { cls: "qy-dashboard-hero" });
+    const copy = hero.createDiv({ cls: "qy-hero-copy" });
+    const now = new Date();
+    copy.createSpan({ cls: "qy-hero-greeting", text: greetingFor(now) });
+    const title = copy.createEl("h1");
+    title.createSpan({ text: "把一条线索，" });
+    title.createSpan({ text: "推进到能再次使用。" });
+    copy.createEl("p", {
+      text: "先留下，再辨认，最后让它回到正在发生的事情里。",
     });
+
+    const actions = copy.createDiv({ cls: "qy-quick-actions" });
+    this.createAction(actions, "收", "捕捉线索", "写入 Inbox", () => this.plugin.captureNote());
+    this.createAction(actions, "写", "写今天", "打开每日笔记", () => this.plugin.openDailyNote());
+    this.createAction(actions, "看", "知识总览", "打开 Bases", () => this.plugin.openKnowledgeBase());
+    this.createAction(actions, "找", "搜索", "查找全部笔记", () => this.plugin.openSearch());
+
+    const manifesto = hero.createDiv({ cls: "qy-hero-manifesto" });
+    manifesto.createSpan({ cls: "qy-manifesto-kicker", text: "QINGYAN METHOD" });
+    manifesto.createEl("p", { text: "人决定什么值得留下。" });
+    manifesto.createEl("p", { text: "Agent 帮你整理来路。" });
+    const seal = manifesto.createDiv({ cls: "qy-manifesto-seal", text: "本地" });
+    seal.setAttr("aria-label", "本地 Markdown");
+
+    const pulse = manifesto.createDiv({ cls: "qy-manifesto-pulse" });
+    pulse.createSpan({ text: `${files.length} 条知识` });
+    pulse.createSpan({ text: `${inboxFiles.length} 条待整理` });
+    pulse.createSpan({ text: `${projectTasks.length} 个下一步` });
   }
 
-  renderQuickActions(root) {
-    const actions = root.createDiv({ cls: "qy-quick-actions" });
-    this.createAction(actions, "square-pen", "捕捉线索", "写入 Inbox", () => this.plugin.captureNote());
-    this.createAction(actions, "calendar-days", "写今天", "打开每日笔记", () => this.plugin.openDailyNote());
-    this.createAction(actions, "database", "知识总览", "打开 Bases", () => this.plugin.openKnowledgeBase());
-    this.createAction(actions, "search", "搜索", "查找全部笔记", () => this.plugin.openSearch());
-  }
-
-  createAction(parent, iconName, label, caption, handler) {
+  createAction(parent, glyph, label, caption, handler) {
     const button = parent.createEl("button", {
       cls: "qy-quick-action",
       attr: { type: "button", "aria-label": `${label}：${caption}` },
     });
-    createIcon(button, iconName);
+    button.createSpan({ cls: "qy-action-glyph", text: glyph });
     const copy = button.createDiv();
     copy.createEl("strong", { text: label });
     copy.createSpan({ text: caption });
     button.addEventListener("click", handler);
   }
 
-  renderStats(root, files, inboxFiles, projectTasks) {
-    const stats = root.createDiv({ cls: "qy-dashboard-stats" });
-    this.createStat(stats, String(files.length), "知识条目");
-    this.createStat(stats, String(inboxFiles.length), "待整理");
-    this.createStat(stats, String(projectTasks.length), "项目下一步");
-    this.createStat(stats, String(files.filter((file) => file.path.startsWith("Sources/")).length), "来源");
+  renderKnowledgeCurrent(root, files, inboxFiles, projectTasks) {
+    const current = root.createDiv({ cls: "qy-knowledge-current" });
+    current.createSpan({ cls: "qy-current-label", text: "知识水路" });
+    this.createCurrentStep(current, "收进来", `${inboxFiles.length} 条待整理`);
+    this.createCurrentStep(current, "想清楚", `${files.length} 条可用知识`);
+    this.createCurrentStep(current, "用起来", `${projectTasks.length} 个下一步`);
   }
 
-  createStat(parent, value, label) {
-    const stat = parent.createDiv({ cls: "qy-dashboard-stat" });
-    stat.createEl("strong", { text: value });
-    stat.createSpan({ text: label });
+  createCurrentStep(parent, label, value) {
+    const step = parent.createDiv({ cls: "qy-current-step" });
+    step.createEl("strong", { text: label });
+    step.createSpan({ text: value });
   }
 
   createSection(parent, title, caption, iconName) {
@@ -256,7 +275,7 @@ class QingyanHomepageView extends ItemView {
       this.renderEmpty(list, "当前项目没有未完成动作。");
       return;
     }
-    tasks.slice(0, 6).forEach((task) => {
+    tasks.slice(0, 5).forEach((task) => {
       const button = list.createEl("button", {
         cls: "qy-task-row",
         attr: { type: "button", "aria-label": `打开项目 ${task.file.basename}` },
