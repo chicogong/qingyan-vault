@@ -1,4 +1,4 @@
-const { ItemView, Notice, Plugin, TFile, setIcon } = require("obsidian");
+const { ItemView, MarkdownView, Notice, Plugin, TFile, setIcon } = require("obsidian");
 
 const VIEW_TYPE = "qingyan-homepage";
 const PRODUCT_NAME = "Qingyan Vault";
@@ -264,7 +264,13 @@ class QingyanHomepageView extends ItemView {
       copy.createSpan({ text: file.parent?.path || "Vault" });
       button.createSpan({ cls: "qy-file-time", text: relativeTime(file.stat.mtime) });
       createIcon(button, "arrow-up-right");
-      button.addEventListener("click", () => this.plugin.openFile(file));
+      button.addEventListener("click", () => {
+        if (title === "Inbox") {
+          this.plugin.openFileWithOptions(file, { mode: "source", atEnd: true });
+        } else {
+          this.plugin.openFileWithOptions(file);
+        }
+      });
     });
   }
 
@@ -284,7 +290,11 @@ class QingyanHomepageView extends ItemView {
       const copy = button.createDiv();
       copy.createEl("strong", { text: task.text });
       copy.createSpan({ text: task.file.basename });
-      button.addEventListener("click", () => this.plugin.openFile(task.file));
+      button.addEventListener("click", () => this.plugin.openFileWithOptions(task.file, {
+        mode: "source",
+        line: task.line,
+        ch: task.ch,
+      }));
     });
   }
 
@@ -304,7 +314,12 @@ class QingyanHomepageView extends ItemView {
       const matcher = /^\s*-\s*\[ \]\s+(.+)$/gm;
       let match;
       while ((match = matcher.exec(content)) !== null) {
-        collected.push({ file, text: cleanTaskText(match[1]) });
+        collected.push({
+          file,
+          text: cleanTaskText(match[1]),
+          line: content.slice(0, match.index).split("\n").length - 1,
+          ch: Math.max(0, match[0].indexOf(match[1])),
+        });
       }
     }
     return collected;
@@ -313,6 +328,7 @@ class QingyanHomepageView extends ItemView {
 
 class QingyanHomepagePlugin extends Plugin {
   async onload() {
+    this.contentLeaf = null;
     this.registerView(VIEW_TYPE, (leaf) => new QingyanHomepageView(leaf, this));
 
     this.addRibbonIcon("layout-dashboard", `打开 ${PRODUCT_NAME}`, () => this.activateHomepage());
@@ -361,8 +377,52 @@ class QingyanHomepagePlugin extends Plugin {
   }
 
   async openFile(file) {
+    return this.openFileWithOptions(file);
+  }
+
+  getContentLeaf() {
+    if (!this.contentLeaf?.parent) {
+      this.contentLeaf = this.app.workspace.getLeaf("tab");
+    }
+    return this.contentLeaf;
+  }
+
+  async openFileWithOptions(file, options = {}) {
     if (!(file instanceof TFile)) return;
-    await this.app.workspace.getLeaf(false).openFile(file);
+    const leaf = this.getContentLeaf();
+    const mode = options.mode || "preview";
+
+    if (file.extension === "md") {
+      await leaf.setViewState({
+        type: "markdown",
+        state: { file: file.path, mode, source: false },
+        active: true,
+      });
+    } else {
+      await leaf.openFile(file, { active: true });
+    }
+    await this.app.workspace.revealLeaf(leaf);
+    this.app.workspace.setActiveLeaf(leaf, { focus: true });
+
+    if (mode !== "source" || !(leaf.view instanceof MarkdownView)) return;
+    const editor = leaf.view.editor;
+    const lastLine = Math.max(0, editor.lineCount() - 1);
+    const line = options.atEnd
+      ? lastLine
+      : Math.min(Math.max(0, options.line || 0), lastLine);
+    const ch = options.atEnd
+      ? editor.getLine(line).length
+      : Math.min(Math.max(0, options.ch || 0), editor.getLine(line).length);
+    const cursor = { line, ch };
+    const focusEditor = () => {
+      if (leaf.view instanceof MarkdownView && leaf.view.editor === editor) {
+        editor.setCursor(cursor);
+        editor.scrollIntoView({ from: cursor, to: cursor }, true);
+        editor.focus();
+      }
+    };
+    focusEditor();
+    window.setTimeout(focusEditor, 120);
   }
 
   async openStaticHome() {
@@ -373,7 +433,7 @@ class QingyanHomepagePlugin extends Plugin {
   async openKnowledgeBase() {
     const file = this.app.vault.getAbstractFileByPath("知识总览.base");
     if (file instanceof TFile) {
-      await this.openFile(file);
+      await this.openFileWithOptions(file);
     } else {
       new Notice("没有找到知识总览.base");
     }
@@ -383,9 +443,13 @@ class QingyanHomepagePlugin extends Plugin {
     this.app.commands.executeCommandById("global-search:open");
   }
 
-  openDailyNote() {
+  async openDailyNote() {
+    const leaf = this.getContentLeaf();
+    await this.app.workspace.revealLeaf(leaf);
+    this.app.workspace.setActiveLeaf(leaf, { focus: true });
     const executed = this.app.commands.executeCommandById("daily-notes");
     if (!executed) new Notice("日记核心插件尚未启用");
+    this.contentLeaf = this.app.workspace.activeLeaf || leaf;
   }
 
   async captureNote() {
@@ -402,10 +466,14 @@ class QingyanHomepagePlugin extends Plugin {
       path = `${folder}/${date} ${time} — 新线索 ${suffix}.md`;
       suffix += 1;
     }
-    const content = `---\ntype: inbox\ncreated: ${now.toISOString()}\n---\n\n# 新线索\n\n`;
+    const content = `---\ntype: inbox\nstatus: raw\ncreated: ${date}\ntags:\n  - inbox\n---\n\n# 新线索\n\n`;
     const file = await this.app.vault.create(path, content);
-    await this.openFile(file);
-    new Notice("已在 Inbox 新建一条线索");
+    await this.openFileWithOptions(file, {
+      mode: "source",
+      line: content.split("\n").length - 2,
+      ch: 0,
+    });
+    new Notice("已新建线索，可以直接输入");
   }
 }
 

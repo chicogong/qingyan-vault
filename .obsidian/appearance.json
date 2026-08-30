@@ -5,6 +5,7 @@
   "enabledCssSnippets": [
     "qingyan-vault"
   ],
+  "showInlineTitle": false,
   "baseFontSize": 17,
   "interfaceFontFamily": "-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
   "textFontFamily": "-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",

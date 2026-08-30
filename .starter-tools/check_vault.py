@@ -195,6 +195,18 @@ def main() -> int:
     else:
         fail(f"homepage contains network API calls: {present_network_markers}", failures)
 
+    workflow_markers = {
+        "single reusable work tab": "getContentLeaf()",
+        "active editor focus": "setActiveLeaf(leaf, { focus: true })",
+        "source-mode capture": 'mode: "source"',
+        "project task location": "line: task.line",
+    }
+    for label, marker in workflow_markers.items():
+        if marker in homepage_source:
+            passed(f"homepage workflow: {label}")
+        else:
+            fail(f"homepage workflow missing: {label}", failures)
+
     core_plugins_path = ROOT / ".obsidian" / "core-plugins.json"
     core_plugins = json.loads(core_plugins_path.read_text(encoding="utf-8"))
     for plugin in sorted(REQUIRED_CORE_PLUGINS):
@@ -251,6 +263,18 @@ def main() -> int:
         passed("audited Border theme selected")
     else:
         fail("Border theme must be the selected visual base", failures)
+
+    if appearance.get("showInlineTitle") is False:
+        passed("inline title hidden to avoid duplicate headings")
+    else:
+        fail("showInlineTitle must be false", failures)
+
+    base_source = (ROOT / "知识总览.base").read_text(encoding="utf-8")
+    knowledge_folders = ("Inbox", "Sources", "Notes", "Projects", "MOCs")
+    if all(f'file.inFolder("{folder}")' in base_source for folder in knowledge_folders):
+        passed("knowledge base limited to production folders")
+    else:
+        fail("knowledge base folder scope is incomplete", failures)
 
     border_manifest_path = ROOT / ".obsidian" / "themes" / "Border" / "manifest.json"
     border_manifest = json.loads(border_manifest_path.read_text(encoding="utf-8"))

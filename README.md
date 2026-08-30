@@ -23,7 +23,7 @@
 1. 从 [Releases](https://github.com/chicogong/qingyan-vault/releases) 下载 `qingyan-vault-*.zip` 并解压。
 2. 在 Obsidian 选择**打开本地仓库**，选中解压后的文件夹。
 3. 首次出现插件信任提示时，选择**信任仓库作者并启用插件**，动态首页会自动打开；不启用也可使用静态 `Home.md`。
-4. 写下一条想法，把它连接到项目或知识地图，再从首页重新找到它。
+4. 点击“捕捉线索”后直接写下一条想法，再从首页 Inbox 重新打开它。
 
 如果你使用 Git，也可以克隆仓库后直接用 Obsidian 打开根目录。
 

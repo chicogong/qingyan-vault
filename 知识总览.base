@@ -2,9 +2,12 @@ filters:
   and:
     - file.ext == "md"
     - file.name != "README"
-    - not:
-        - file.inFolder("Templates")
-        - file.inFolder("Archive")
+    - or:
+        - file.inFolder("Inbox")
+        - file.inFolder("Sources")
+        - file.inFolder("Notes")
+        - file.inFolder("Projects")
+        - file.inFolder("MOCs")
 properties:
   file.name:
     displayName: 标题
