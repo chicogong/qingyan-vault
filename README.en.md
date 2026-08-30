@@ -1,41 +1,59 @@
-# Qingyan Vault
-
-[简体中文](README.md) · English
-
-**A ready-to-use, agent-native Obsidian vault where agents draft and people decide.**
-
-Everything remains local Markdown. The release archive needs no account, network connection, or model. It includes one audited first-party dynamic homepage plugin; unzip it and open the folder in Obsidian.
+<div align="center">
+  <img src=".github/assets/qingyan-vault-lockup.svg" width="920" alt="Qingyan Vault — Agent-native Obsidian Vault">
+  <p><strong>A ready-to-use, Chinese-first Obsidian vault where agents draft and people decide.</strong></p>
+  <p><a href="README.md">简体中文</a> · English</p>
+</div>
 
 ![Qingyan Vault light home](.github/assets/home-light.png)
 
+## Working in one minute
+
+1. Download and unzip the latest `qingyan-vault-*.zip` from [Releases](https://github.com/chicogong/qingyan-vault/releases).
+2. Open the extracted folder as an Obsidian vault.
+3. Trust and enable the bundled first-party homepage, or stay in safe mode and use `Home.md`.
+4. Choose **Capture**, write one sentence, and find it again from Inbox on Home.
+
+No account, network connection, model, or plugin setup is required.
+
 ## The missing first layer
 
-Many Obsidian templates stop at folders and appearance. Many agent vaults begin with skills, memory, Git automation, semantic search, or heavy governance. Qingyan Vault starts with a complete daily loop and keeps advanced controls optional.
+Many templates stop at folders and appearance. Many AI knowledge tools begin with chat, indexing, skills, or heavy automation. Qingyan Vault starts with a complete daily loop and keeps advanced controls optional.
 
 ```text
-capture → connect → isolated agent draft → human acceptance → reuse
+capture → preserve sources → form a judgment → isolated agent draft → human acceptance → reuse
 ```
 
-## Start in 60 seconds
+| What matters | Qingyan Vault's answer |
+| --- | --- |
+| First-open clarity | A Chinese Home, semantic folder shelf, synthetic examples, and a 60-second loop |
+| Safe agent changes | Read-only by default; isolated drafts; facts, inference, and unknowns stay separate |
+| Portability | Markdown, WikiLinks, YAML, Bases, and Canvas remain the source of truth |
+| Graceful fallback | Disable the homepage and keep static Home, search, Bases, Canvas, and every note |
+| Data boundary | Local files by default; no account, network call, telemetry, or bundled model |
+| Stricter governance | Optional LLM Wiki Canvas review for source binding, precise diffs, and conflict blocking |
 
-1. Download and unzip the latest archive from [Releases](https://github.com/chicogong/qingyan-vault/releases).
-2. Open the extracted folder as an Obsidian vault.
-3. At the first-run trust prompt, choose **Trust author and enable plugins** to open the dynamic homepage. Safe mode keeps the static `Home.md` fully usable.
-4. Point a file-based agent at the folder and ask it to read `AGENTS.md` before doing anything.
+The point is not “AI writes more.” It is that your knowledge remains readable after you change models, tools, or machines—and every proposed change remains explainable, rejectable, and reversible.
 
-## Included
+## Real product surfaces
 
-- A Chinese-first Home cockpit, templates, synthetic sources, notes, projects, maps, reviews, Bases, and Canvas.
-- A canonical `AGENTS.md`, a thin Claude adapter, isolated drafts, handoffs, and reusable feedback.
-- The MIT-licensed Border theme plus a Qingyan visual layer with light, dark, narrow-window, keyboard-focus, and reduced-motion support.
-- An optional Strict Review workflow powered by LLM Wiki Canvas for source-bound, conflict-safe changes.
-- Portable checks and a reproducible release-archive builder.
+<table>
+  <tr>
+    <td width="50%"><img src=".github/assets/workspace-shelf.png" alt="Qingyan Vault semantic folder shelf"><br><sub>Semantic folder shelf</sub></td>
+    <td width="50%"><img src=".github/assets/capture-flow.png" alt="Qingyan Vault capture editor"><br><sub>Capture directly into the visible work surface</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src=".github/assets/knowledge-base.png" alt="Qingyan Vault core Bases overview"><br><sub>Core Bases, no Dataview dependency</sub></td>
+    <td width="50%"><img src=".github/assets/home-dark.png" alt="Qingyan Vault dark home"><br><sub>A coherent light and dark visual system</sub></td>
+  </tr>
+</table>
 
-## Boundaries
+## Agent-native, not agent-controlled
 
-Markdown stays the source of truth. Qingyan Vault ships no LLM, chat UI, vector database, cloud sync, third-party executable plugin, or opaque automatic memory. The bundled Qingyan Vault Homepage only reads local Vault metadata and Markdown; it performs no network calls. Agents do not silently rewrite accepted knowledge. Strict Review is an optional engine, not a second user-facing product.
+Codex reads `AGENTS.md` at the root. Claude Code follows the thin `CLAUDE.md` adapter. WorkBuddy, Qoder, and other file-based agents can be pointed at the same policy. Permissions progress from read-only, to isolated drafts, to named-file edits, to explicitly approved structural changes. Agents do not silently rewrite accepted knowledge, move files, install plugins, connect accounts, or publish.
 
-Obsidian treats executable code shipped inside any vault as a community plugin, so a first-run trust prompt is expected. Download only from this repository's Releases; safe mode is the no-code fallback.
+## Minimal plugin surface
+
+The archive enables one audited first-party plugin, `Qingyan Vault Homepage`. It reads local Markdown and metadata, writes only when Capture is clicked, and has no network API, model call, or telemetry. Border provides the mature app shell; Qingyan CSS provides the Home, folder shelf, and reading system. Disable either layer without losing content.
 
 ## Verify
 
@@ -44,7 +62,9 @@ Obsidian treats executable code shipped inside any vault as a community plugin, 
 ./.starter-tools/build-release.py --check
 ```
 
-See the [Chinese README](README.md), [product thesis](docs/PRODUCT.md), [roadmap](ROADMAP.md), and [security policy](SECURITY.md) for the complete contract.
+The repository uses synthetic examples only. Current evidence covers a clean release archive and local Obsidian testing; Windows, Linux, mobile, and real long-term adoption remain to be verified.
+
+See the [Chinese README](README.md), [product thesis](docs/PRODUCT.md), [roadmap](ROADMAP.md), [security policy](SECURITY.md), and [contribution guide](CONTRIBUTING.md).
 
 ## License
 

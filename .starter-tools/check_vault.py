@@ -74,6 +74,10 @@ REQUIRED_FILES = [
     ".obsidian/workspace.json",
     ".github/assets/home-light.png",
     ".github/assets/home-dark.png",
+    ".github/assets/workspace-shelf.png",
+    ".github/assets/capture-flow.png",
+    ".github/assets/knowledge-base.png",
+    ".github/assets/qingyan-vault-lockup.svg",
 ]
 
 REQUIRED_CORE_PLUGINS = {
@@ -196,7 +200,12 @@ def main() -> int:
         fail(f"homepage contains network API calls: {present_network_markers}", failures)
 
     workflow_markers = {
-        "single reusable work tab": "getContentLeaf()",
+        "visible homepage leaf": "this.plugin.captureNote(this.leaf)",
+        "visible root leaf entry": "candidate.view?.containerEl?.isShown?.()",
+        "single visible work surface": "const leaf = sourceLeaf || this.getContentLeaf();",
+        "main workspace entry routing": "workspace.getMostRecentLeaf(workspace.rootSplit)",
+        "official file navigation": "await leaf.openFile(file,",
+        "same-surface daily note": 'const folder = "Review/Daily";',
         "active editor focus": "setActiveLeaf(leaf, { focus: true })",
         "source-mode capture": 'mode: "source"',
         "project task location": "line: task.line",
@@ -235,15 +244,21 @@ def main() -> int:
             fail(f"app setting mismatch: {key} must be {expected!r}", failures)
 
     expected_ignored_files = {
+        ".github/",
+        ".starter-tools/",
         "docs/",
+        "dist/",
         "AGENTS.md",
         "CLAUDE.md",
         "CODE_OF_CONDUCT.md",
         "CONTRIBUTING.md",
+        "LICENSE",
+        "README.md",
         "README.en.md",
         "ROADMAP.md",
         "SECURITY.md",
         "CHANGELOG.md",
+        "THIRD_PARTY_NOTICES.md",
         "VERSION",
     }
     ignored_files = set(app_config.get("userIgnoreFilters", []))
@@ -264,10 +279,10 @@ def main() -> int:
     else:
         fail("Border theme must be the selected visual base", failures)
 
-    if appearance.get("showInlineTitle") is False:
+    if app_config.get("showInlineTitle") is False:
         passed("inline title hidden to avoid duplicate headings")
     else:
-        fail("showInlineTitle must be false", failures)
+        fail("app.json showInlineTitle must be false", failures)
 
     base_source = (ROOT / "知识总览.base").read_text(encoding="utf-8")
     knowledge_folders = ("Inbox", "Sources", "Notes", "Projects", "MOCs")
@@ -298,7 +313,13 @@ def main() -> int:
         fail("Qingyan Vault root LICENSE must contain the full MIT grant", failures)
 
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    for screenshot in (".github/assets/home-light.png", ".github/assets/home-dark.png"):
+    for screenshot in (
+        ".github/assets/home-light.png",
+        ".github/assets/home-dark.png",
+        ".github/assets/workspace-shelf.png",
+        ".github/assets/capture-flow.png",
+        ".github/assets/knowledge-base.png",
+    ):
         if screenshot in readme:
             passed(f"README references screenshot: {screenshot}")
         else:
@@ -308,6 +329,13 @@ def main() -> int:
             passed(f"real PNG screenshot: {screenshot}")
         else:
             fail(f"screenshot is not a real PNG: {screenshot}", failures)
+
+    lockup = ROOT / ".github" / "assets" / "qingyan-vault-lockup.svg"
+    lockup_source = lockup.read_text(encoding="utf-8") if lockup.is_file() else ""
+    if "<svg" in lockup_source and "Qingyan Vault" in lockup_source and "LOCAL MARKDOWN" in lockup_source:
+        passed("repository brand lockup is portable SVG")
+    else:
+        fail("repository brand lockup is missing or invalid", failures)
 
     home = (ROOT / "Home.md").read_text(encoding="utf-8")
     for marker in ("obsidian://daily", "task-todo:/./", "今天，只推进一件事", "Guides/把它变成你的"):

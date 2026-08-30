@@ -48,6 +48,86 @@ body:has(.workspace-leaf.mod-active .starter-home) .mod-sidedock.mod-right-split
   background: color-mix(in srgb, var(--qy-stone) 10%, transparent);
 }
 
+/* File explorer: turn the folder tree into a quiet knowledge shelf. The
+   markers describe the role of each top-level folder; they are not decoration
+   and remain legible when the sidebar is narrow. */
+.workspace-leaf-content[data-type="file-explorer"] .nav-files-container {
+  padding: 0.65rem 0.45rem 2.5rem;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--qy-paper) 72%, transparent), transparent 10rem),
+    var(--background-secondary);
+}
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder.mod-root > .nav-folder-children {
+  padding-inline: 0.18rem;
+}
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder.mod-root > .nav-folder-children > .nav-folder {
+  margin-block: 0.15rem;
+}
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder.mod-root > .nav-folder-children > .nav-folder > .nav-folder-title {
+  min-height: 2rem;
+  border: 1px solid transparent;
+  border-radius: 4px 12px 4px 10px;
+  color: var(--qy-ink);
+  font-size: 0.76rem;
+  font-weight: 720;
+}
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder.mod-root > .nav-folder-children > .nav-folder > .nav-folder-title:hover,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder.mod-root > .nav-folder-children > .nav-folder > .nav-folder-title:focus-within {
+  border-color: var(--qy-line);
+  background: color-mix(in srgb, var(--qy-paper-deep) 58%, transparent);
+}
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title-content {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+}
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title-content::before {
+  display: inline-grid;
+  width: 1.42rem;
+  height: 1.42rem;
+  flex: 0 0 1.42rem;
+  margin-right: 0.42rem;
+  border: 1px solid var(--qy-line);
+  border-radius: 50%;
+  color: var(--qy-muted);
+  content: "·";
+  font-family: var(--qy-display);
+  font-size: 0.64rem;
+  line-height: 1;
+  place-items: center;
+}
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Inbox"] .nav-folder-title-content::before { color: var(--qy-seal); content: "收"; }
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Sources"] .nav-folder-title-content::before { color: var(--qy-gold); content: "源"; }
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Notes"] .nav-folder-title-content::before { color: var(--qy-stone); content: "知"; }
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Projects"] .nav-folder-title-content::before { color: var(--qy-seal); content: "事"; }
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="MOCs"] .nav-folder-title-content::before { color: var(--qy-stone); content: "图"; }
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Review"] .nav-folder-title-content::before { color: var(--qy-gold); content: "省"; }
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Agent"] .nav-folder-title-content::before { color: var(--qy-seal); content: "AI"; font-family: var(--font-monospace); font-size: 0.52rem; }
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Guides"] .nav-folder-title-content::before { color: var(--qy-stone); content: "引"; }
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Templates"] .nav-folder-title-content::before { color: var(--qy-muted); content: "模"; }
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Canvas"] .nav-folder-title-content::before { color: var(--qy-stone); content: "绘"; }
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Archive"] .nav-folder-title-content::before { color: var(--qy-muted); content: "藏"; }
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Attachments"] .nav-folder-title-content::before { color: var(--qy-muted); content: "附"; }
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-file-title {
+  min-height: 1.78rem;
+  color: var(--qy-muted);
+  font-size: 0.74rem;
+}
+
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-file-title:hover,
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-file-title:focus-within {
+  color: var(--qy-ink);
+  background: color-mix(in srgb, var(--qy-paper-deep) 48%, transparent);
+}
+
 /* Keep project governance in Git without turning it into daily navigation. */
 .nav-folder-title[data-path="docs"],
 .nav-folder-title[data-path="dist"],
@@ -369,6 +449,78 @@ body:has(.workspace-leaf.mod-active .starter-home) .mod-sidedock.mod-right-split
 
 .starter-guide table {
   font-size: 0.92rem;
+}
+
+/* Everyday notes: editorial, readable, and deliberately quieter than Home. */
+.workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.starter-home) .markdown-preview-sizer,
+.workspace-leaf-content[data-type="markdown"] .markdown-source-view:not(.starter-home).mod-cm6 .cm-contentContainer {
+  max-width: 820px;
+  padding-bottom: 6rem;
+}
+
+.workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.starter-home) h1 {
+  margin-top: 1.8rem;
+  color: var(--qy-ink);
+  font-family: var(--qy-display);
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 680;
+  letter-spacing: -0.045em;
+  line-height: 1.18;
+}
+
+.workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.starter-home) h2 {
+  margin-top: 2.2rem;
+  padding-bottom: 0.38rem;
+  border-bottom: 1px solid var(--qy-line);
+  color: var(--qy-stone);
+  font-size: 1.08rem;
+  letter-spacing: 0.035em;
+}
+
+.workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.starter-home) blockquote {
+  padding: 0.2rem 0 0.2rem 1rem;
+  border-left: 2px solid var(--qy-jade);
+  color: var(--qy-muted);
+  font-family: var(--qy-display);
+}
+
+.workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.starter-home) .callout {
+  border: 1px solid var(--qy-line);
+  border-radius: 4px 18px 5px 14px;
+  background: color-mix(in srgb, var(--qy-paper) 68%, transparent);
+  box-shadow: none;
+}
+
+.workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.starter-home) .callout-title {
+  font-size: 0.78rem;
+  font-weight: 760;
+  letter-spacing: 0.04em;
+}
+
+.workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.starter-home) table {
+  border-collapse: collapse;
+  font-size: 0.91rem;
+}
+
+.workspace-leaf-content[data-type="markdown"] .markdown-preview-view:not(.starter-home) th {
+  border-top: 2px solid var(--qy-stone);
+  background: color-mix(in srgb, var(--qy-paper-deep) 54%, transparent);
+  color: var(--qy-stone);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+}
+
+.workspace-leaf-content[data-type="markdown"] input[type="checkbox"] {
+  border-color: color-mix(in srgb, var(--qy-seal) 62%, transparent);
+  border-radius: 50%;
+}
+
+.workspace-leaf-content[data-type="markdown"] .tag {
+  border: 1px solid var(--qy-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--qy-muted);
+  font-size: 0.68rem;
 }
 
 @media (max-width: 760px) {

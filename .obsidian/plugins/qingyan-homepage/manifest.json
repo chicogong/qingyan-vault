@@ -1,7 +1,7 @@
 {
   "id": "qingyan-homepage",
   "name": "Qingyan Vault Homepage",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "minAppVersion": "1.4.10",
   "description": "A local-first dynamic homepage for Qingyan Vault.",
   "author": "Chico Gong",

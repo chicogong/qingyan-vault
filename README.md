@@ -1,95 +1,109 @@
-# Qingyan Vault
-
-[简体中文](README.md) · [English](README.en.md)
-
-**Agent-native Obsidian Vault：人负责判断与定稿，Agent 负责检索、整理和起草。**
-
-内容始终保存在本地 Markdown 中。无需账号、无需网络、无需模型；发行包只内置一个经过审计的第一方动态首页插件。下载 Release ZIP 后，用 Obsidian 打开文件夹即可使用。
+<div align="center">
+  <img src=".github/assets/qingyan-vault-lockup.svg" width="920" alt="Qingyan Vault — Agent-native Obsidian Vault">
+  <p><strong>开箱即用的中文 Agent-native Obsidian Vault：Agent 起草，人来决定。</strong></p>
+  <p>
+    <a href="https://github.com/chicogong/qingyan-vault/actions/workflows/validate.yml"><img src="https://github.com/chicogong/qingyan-vault/actions/workflows/validate.yml/badge.svg" alt="Validation"></a>
+    <a href="https://github.com/chicogong/qingyan-vault/releases"><img src="https://img.shields.io/github/v/release/chicogong/qingyan-vault?include_prereleases&color=245f5b" alt="Release"></a>
+    <a href="LICENSE"><img src="https://img.shields.io/github/license/chicogong/qingyan-vault?color=b94d42" alt="MIT License"></a>
+    <img src="https://img.shields.io/badge/data-local--first-245f5b" alt="Local-first">
+    <img src="https://img.shields.io/badge/language-中文-a27632" alt="Chinese-first">
+  </p>
+  <p><a href="README.md">简体中文</a> · <a href="README.en.md">English</a></p>
+</div>
 
 ![Qingyan Vault 中文浅色首页](.github/assets/home-light.png)
 
-## 为什么做 Qingyan Vault
+## 一分钟后，你已经在工作
 
-普通 Obsidian 模板往往只有目录和外观；许多 Agent Vault 又从 Skills、记忆、Git、向量检索和复杂治理开始。Qingyan Vault 提供中间缺失的一层：第一分钟就能工作，同时为长期迁移和 Agent 协作保留清楚边界。
-
-```text
-捕捉 → 连接到来源与项目 → Agent 隔离起草 → 人工接纳 → 再次使用
-```
-
-它不把“AI 能写文件”当作卖点。真正的产品承诺是：换模型、换 Agent、换电脑之后，你的知识仍然可读；Agent 的改动仍然可检查、可拒绝、可回退。
-
-## 60 秒开始
-
-1. 从 [Releases](https://github.com/chicogong/qingyan-vault/releases) 下载 `qingyan-vault-*.zip` 并解压。
+1. 从 [Releases](https://github.com/chicogong/qingyan-vault/releases) 下载并解压 `qingyan-vault-*.zip`。
 2. 在 Obsidian 选择**打开本地仓库**，选中解压后的文件夹。
-3. 首次出现插件信任提示时，选择**信任仓库作者并启用插件**，动态首页会自动打开；不启用也可使用静态 `Home.md`。
-4. 点击“捕捉线索”后直接写下一条想法，再从首页 Inbox 重新打开它。
+3. 信任并启用内置的第一方首页插件；不启用也能继续使用静态 `Home.md`。
+4. 点击**捕捉线索**，写下一句话；回到首页，它已经出现在 Inbox。
 
-如果你使用 Git，也可以克隆仓库后直接用 Obsidian 打开根目录。
+无需账号、无需网络、无需模型，也无需先配置插件。使用 Git 的人也可以直接克隆仓库并打开根目录。
 
-## 里面有什么
+## 它补上了哪一层
 
-- **Homepage Enhanced 类型的动态首页**：时间与问候、快捷捕捉、最近编辑、Inbox、项目下一步和知识重访。
-- **完整合成示例**：从来源、自己的判断、项目到知识地图和每周回顾。
-- **中文模板**：每日笔记、来源、知识笔记、项目、知识地图和每周回顾。
-- **Agent 协作协议**：统一 `AGENTS.md`、Claude 轻量适配、隔离草稿、交接与反馈。
-- **本地视觉系统**：MIT Border 主题加 Qingyan Vault 视觉层，支持浅色、深色、窄窗口、键盘焦点和减少动态效果。
-- **可选严格审核**：重要改动可使用 LLM Wiki Canvas 的来源绑定、精确 Diff、冲突阻断和人工接受/拒绝。
-
-## 给普通用户
-
-- `Inbox/` 先捕捉，不急着分类。
-- `Sources/` 保存出处，`Notes/` 写自己的判断。
-- `Projects/` 只保留明确结果和下一步。
-- `MOCs/` 负责导航，`Review/` 让知识重新产生作用。
-
-完整说明见[用户使用手册](Guides/%E7%94%A8%E6%88%B7%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C.md)和[10 分钟个性化设置](Guides/%E6%8A%8A%E5%AE%83%E5%8F%98%E6%88%90%E4%BD%A0%E7%9A%84.md)。
-
-## 给 Agent
-
-- Codex 从根目录读取 `AGENTS.md`；Claude Code 通过 `CLAUDE.md` 指向同一规则。
-- 默认 R0 只读；不确定或多文件内容先写入 `Agent/草稿/`。
-- 来源事实、模型推断和待验证内容必须分开。
-- Agent 不得静默改正式知识、目录结构或 `.obsidian/`。
-- 提交、推送、联网、安装插件和公开发布始终需要独立授权。
-
-完整说明见[Agent 使用手册](Guides/Agent%20%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C.md)。
-
-## 可选 Strict Review
-
-日常小改动使用隔离草稿和人工接纳即可。批量、重要或有来源约束的改动，按[严格审核手册](Guides/严格审核.md)接入 `llm-wiki-canvas`：
+普通模板常停在目录和外观；AI 知识工具常从聊天、索引、Skills 或复杂自动化开始。Qingyan Vault 先交付一个完整的日常闭环，再把高级能力留成可选层。
 
 ```text
-选定来源 → 隔离草稿 → 查看依据与改动 → 人工接受/退回 → 正式 Markdown
+捕捉 → 保留来源 → 形成判断 → Agent 隔离起草 → 人工接纳 → 回到项目与回顾
 ```
 
-Qingyan Vault 是唯一面向用户的知识产品；LWC 在这里承担可替换的审核引擎，不要求新用户先理解 hash、Evidence Ledger 或 Proposal。
+| 你真正关心的事 | Qingyan Vault 的做法 |
+| --- | --- |
+| 第一次打开会不会迷路 | 中文首页、语义目录、合成示例和 60 秒闭环已经配置好 |
+| AI 会不会改坏知识 | 默认只读；草稿隔离；事实、推断、待验证分开；正式知识由人接纳 |
+| 换模型或工具怎么办 | Markdown、WikiLinks、YAML、Bases 与 Canvas 是事实源，不绑定单一 Agent |
+| 不想运行插件怎么办 | 关闭第一方首页后，静态 Home、搜索、Bases、Canvas 和全部内容仍可用 |
+| 数据会去哪里 | 默认只读本地文件；无账号、无网络调用、无遥测、无内置模型 |
+| Vault 变大后如何治理 | 可选接入 LLM Wiki Canvas 做来源绑定、精确 Diff、冲突阻断和人工审核 |
 
-## 为什么只内置一个第一方插件
+**核心优势不是“AI 帮你多写”，而是换模型、换工具、换电脑后，知识仍可读，改动仍可解释、拒绝和撤回。**
 
-插件全家桶会增加安装、权限、联网、升级和跨平台风险。Qingyan Vault 只内置 `Qingyan Vault Homepage`：它在本地读取文件元数据和 Markdown，只有点击“捕捉线索”时才写入 `Inbox/`，不联网、不调用模型、不发送遥测。关闭插件后，静态 `Home.md`、Markdown、WikiLinks、Bases 和 Canvas 仍然可读。
+## 不只是一张首页
 
-Obsidian 会把任何随 Vault 分发的可执行插件都视为社区插件，因此首次打开会显示信任提示。只从本仓库 Release 下载；若暂不信任，选择安全模式即可继续使用静态版。
+<table>
+  <tr>
+    <td width="50%"><img src=".github/assets/workspace-shelf.png" alt="带语义标记的 Qingyan Vault 左侧目录"><br><sub><b>知识书架</b>：收、源、知、事、图、省与 Agent 草稿分区一眼可辨。</sub></td>
+    <td width="50%"><img src=".github/assets/capture-flow.png" alt="Qingyan Vault 捕捉线索编辑界面"><br><sub><b>捕捉即写</b>：点击后直接进入当前工作面，不堆标签、不再补点编辑器。</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src=".github/assets/knowledge-base.png" alt="Qingyan Vault 知识总览 Bases"><br><sub><b>核心 Bases</b>：按 Inbox、来源、长期知识和项目查看，不依赖 Dataview。</sub></td>
+    <td width="50%"><img src=".github/assets/home-dark.png" alt="Qingyan Vault 中文深色首页"><br><sub><b>完整明暗主题</b>：目录、首页、正文、表格、任务与键盘焦点使用同一视觉语言。</sub></td>
+  </tr>
+</table>
 
-## 验证
+## 目录就是工作流
+
+| 目录 | 只负责一件事 |
+| --- | --- |
+| `Inbox/` | 先捕捉，还没想好归属也没关系 |
+| `Sources/` | 保存出处、日期、范围与可追溯摘要 |
+| `Notes/` | 用自己的话形成长期判断 |
+| `Projects/` | 把知识连接到有完成标准的结果 |
+| `MOCs/` | 给主题建立导航，不复制正文 |
+| `Review/` | 让旧知识在每日与每周节奏里重新产生作用 |
+| `Agent/草稿/` | 隔离 Agent 生成但尚未接纳的内容 |
+| `Templates/` | 来源、知识、项目、地图、日记与周回顾模板 |
+
+完整操作见[用户使用手册](Guides/%E7%94%A8%E6%88%B7%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C.md)和[10 分钟个性化设置](Guides/%E6%8A%8A%E5%AE%83%E5%8F%98%E6%88%90%E4%BD%A0%E7%9A%84.md)。
+
+## Agent-native，不是 AI 接管
+
+- Codex 从根目录读取 `AGENTS.md`；Claude Code 通过 `CLAUDE.md` 读取同一规则。
+- WorkBuddy、Qoder 等文件型 Agent 显式引用 `AGENTS.md` 即可共享边界。
+- 权限从 R0 只读、R1 隔离草稿、R2 定点写入到 R3 结构变更逐级授权。
+- 来源事实、模型推断和待验证内容必须分开；Agent 不静默移动、删除或发布。
+- 批量或重要改动可使用[严格审核](Guides/严格审核.md)，日常使用不暴露工程术语。
+
+示例指令：
+
+```text
+先读 AGENTS.md、Home.md，以及与“夜航花园”直接相关的项目和来源。
+不要修改文件。列出已有事实、推断、待验证和最小建议。
+```
+
+完整协议见[Agent 使用手册](Guides/Agent%20%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C.md)。
+
+## 克制的插件策略
+
+发行包只启用一个经过审计的第一方插件 `Qingyan Vault Homepage`：它读取本地文件元数据和 Markdown，点击捕捉时才写入 `Inbox/`，没有网络调用、模型请求或遥测。Obsidian 会对随 Vault 分发的可执行插件显示首次信任提示；请只从本仓库 Release 下载，或用安全模式使用静态版。
+
+Border 主题负责成熟应用外壳，Qingyan CSS 负责首页、知识书架和正文视觉；所有归因保留在 `THIRD_PARTY_NOTICES.md`。社区插件按真实摩擦再添加，建议见[插件与主题](Guides/插件与主题.md)。
+
+## 验证与开源边界
 
 ```sh
 ./.starter-tools/self-check.sh
 ./.starter-tools/build-release.py --check
 ```
 
-检查覆盖目录、核心设置、WikiLinks、Canvas、合成来源、绝对路径、凭据特征、第三方许可、第一方插件白名单与无网络调用、工作区首页和发行包内容。GitHub Actions 会在每次提交和 PR 中运行同一检查。
+检查覆盖目录、核心设置、WikiLinks、Canvas、合成来源、绝对路径、凭据特征、第三方许可、第一方插件白名单与无网络调用、工作区首页、截图和发行包内容。GitHub Actions 在每次提交与 PR 运行同一检查。
 
-当前验证证明仓库和发行包可复制、可降级，并在本机 Obsidian 中打开；发布后的 Issue、下载和复现证据将用于继续校正产品，不虚构用户留存。
-
-![Qingyan Vault 中文深色首页](.github/assets/home-dark.png)
-
-## 边界
-
-- 不内置模型、聊天界面、向量数据库或云同步。
-- 不上传 Vault，不自动建立不透明的长期记忆。
-- 不把大量插件、漂亮首页或图谱包装成护城河。
-- 不读取、发布或用真实私人 Vault 作为演示数据。
+- 仓库演示全部是合成内容，不使用真实私人 Vault。
+- 不内置聊天界面、向量数据库、云同步或不透明长期记忆。
+- 当前证据是本机 Obsidian 与干净发行包闭环；Windows、Linux、移动端及真实长期采用仍待验证。
 
 更多信息：[产品主旨](docs/PRODUCT.md) · [路线图](ROADMAP.md) · [开源规划](docs/OPEN_SOURCE_PLAN.md) · [安全策略](SECURITY.md) · [贡献指南](CONTRIBUTING.md)
 

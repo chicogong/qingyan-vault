@@ -193,9 +193,9 @@ class QingyanHomepageView extends ItemView {
     });
 
     const actions = copy.createDiv({ cls: "qy-quick-actions" });
-    this.createAction(actions, "收", "捕捉线索", "写入 Inbox", () => this.plugin.captureNote());
-    this.createAction(actions, "写", "写今天", "打开每日笔记", () => this.plugin.openDailyNote());
-    this.createAction(actions, "看", "知识总览", "打开 Bases", () => this.plugin.openKnowledgeBase());
+    this.createAction(actions, "收", "捕捉线索", "写入 Inbox", () => this.plugin.captureNote(this.leaf));
+    this.createAction(actions, "写", "写今天", "打开每日笔记", () => this.plugin.openDailyNote(this.leaf));
+    this.createAction(actions, "看", "知识总览", "打开 Bases", () => this.plugin.openKnowledgeBase(this.leaf));
     this.createAction(actions, "找", "搜索", "查找全部笔记", () => this.plugin.openSearch());
 
     const manifesto = hero.createDiv({ cls: "qy-hero-manifesto" });
@@ -266,9 +266,9 @@ class QingyanHomepageView extends ItemView {
       createIcon(button, "arrow-up-right");
       button.addEventListener("click", () => {
         if (title === "Inbox") {
-          this.plugin.openFileWithOptions(file, { mode: "source", atEnd: true });
+          this.plugin.openFileWithOptions(file, { mode: "source", atEnd: true }, this.leaf);
         } else {
-          this.plugin.openFileWithOptions(file);
+          this.plugin.openFileWithOptions(file, {}, this.leaf);
         }
       });
     });
@@ -294,7 +294,7 @@ class QingyanHomepageView extends ItemView {
         mode: "source",
         line: task.line,
         ch: task.ch,
-      }));
+      }, this.leaf));
     });
   }
 
@@ -328,7 +328,6 @@ class QingyanHomepageView extends ItemView {
 
 class QingyanHomepagePlugin extends Plugin {
   async onload() {
-    this.contentLeaf = null;
     this.registerView(VIEW_TYPE, (leaf) => new QingyanHomepageView(leaf, this));
 
     this.addRibbonIcon("layout-dashboard", `打开 ${PRODUCT_NAME}`, () => this.activateHomepage());
@@ -366,14 +365,13 @@ class QingyanHomepagePlugin extends Plugin {
   }
 
   async activateHomepage() {
-    const existing = this.app.workspace.getLeavesOfType(VIEW_TYPE)[0];
-    if (existing) {
-      await this.app.workspace.revealLeaf(existing);
-      return;
-    }
-    const leaf = this.app.workspace.getLeaf(false);
+    const leaf = this.getContentLeaf();
+    this.app.workspace.getLeavesOfType(VIEW_TYPE).forEach((candidate) => {
+      if (candidate !== leaf) candidate.detach();
+    });
     await leaf.setViewState({ type: VIEW_TYPE, active: true });
     await this.app.workspace.revealLeaf(leaf);
+    this.app.workspace.setActiveLeaf(leaf, { focus: true });
   }
 
   async openFile(file) {
@@ -381,23 +379,24 @@ class QingyanHomepagePlugin extends Plugin {
   }
 
   getContentLeaf() {
-    if (!this.contentLeaf?.parent) {
-      this.contentLeaf = this.app.workspace.getLeaf("tab");
-    }
-    return this.contentLeaf;
+    const { workspace } = this.app;
+    const recentLeaf = workspace.getMostRecentLeaf(workspace.rootSplit);
+    if (recentLeaf?.view?.containerEl?.isShown?.()) return recentLeaf;
+    let visibleLeaf = null;
+    workspace.iterateRootLeaves((candidate) => {
+      if (candidate.view?.containerEl?.isShown?.()) visibleLeaf = candidate;
+    });
+    if (visibleLeaf) return visibleLeaf;
+    return recentLeaf || workspace.getLeaf(false);
   }
 
-  async openFileWithOptions(file, options = {}) {
+  async openFileWithOptions(file, options = {}, sourceLeaf = null) {
     if (!(file instanceof TFile)) return;
-    const leaf = this.getContentLeaf();
+    const leaf = sourceLeaf || this.getContentLeaf();
     const mode = options.mode || "preview";
 
     if (file.extension === "md") {
-      await leaf.setViewState({
-        type: "markdown",
-        state: { file: file.path, mode, source: false },
-        active: true,
-      });
+      await leaf.openFile(file, { active: true, state: { mode, source: false } });
     } else {
       await leaf.openFile(file, { active: true });
     }
@@ -430,10 +429,10 @@ class QingyanHomepagePlugin extends Plugin {
     if (file instanceof TFile) await this.openFile(file);
   }
 
-  async openKnowledgeBase() {
+  async openKnowledgeBase(sourceLeaf = null) {
     const file = this.app.vault.getAbstractFileByPath("知识总览.base");
     if (file instanceof TFile) {
-      await this.openFileWithOptions(file);
+      await this.openFileWithOptions(file, {}, sourceLeaf);
     } else {
       new Notice("没有找到知识总览.base");
     }
@@ -443,16 +442,24 @@ class QingyanHomepagePlugin extends Plugin {
     this.app.commands.executeCommandById("global-search:open");
   }
 
-  async openDailyNote() {
-    const leaf = this.getContentLeaf();
-    await this.app.workspace.revealLeaf(leaf);
-    this.app.workspace.setActiveLeaf(leaf, { focus: true });
-    const executed = this.app.commands.executeCommandById("daily-notes");
-    if (!executed) new Notice("日记核心插件尚未启用");
-    this.contentLeaf = this.app.workspace.activeLeaf || leaf;
+  async openDailyNote(sourceLeaf = null) {
+    const folder = "Review/Daily";
+    const date = localDateKey(new Date());
+    if (!this.app.vault.getAbstractFileByPath(folder)) {
+      await this.app.vault.createFolder(folder);
+    }
+    let file = this.app.vault.getAbstractFileByPath(`${folder}/${date}.md`);
+    if (!(file instanceof TFile)) {
+      const template = this.app.vault.getAbstractFileByPath("Templates/每日笔记.md");
+      const source = template instanceof TFile
+        ? await this.app.vault.cachedRead(template)
+        : `# ${date}\n\n## 今天\n\n- [ ] 今天只推进：\n`;
+      file = await this.app.vault.create(`${folder}/${date}.md`, source.replaceAll("{{date}}", date));
+    }
+    await this.openFileWithOptions(file, { mode: "source" }, sourceLeaf);
   }
 
-  async captureNote() {
+  async captureNote(sourceLeaf = null) {
     const folder = "Inbox";
     if (!this.app.vault.getAbstractFileByPath(folder)) {
       await this.app.vault.createFolder(folder);
@@ -472,7 +479,7 @@ class QingyanHomepagePlugin extends Plugin {
       mode: "source",
       line: content.split("\n").length - 2,
       ch: 0,
-    });
+    }, sourceLeaf);
     new Notice("已新建线索，可以直接输入");
   }
 }
