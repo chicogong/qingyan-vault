@@ -1,0 +1,12 @@
+{
+  "accentColor": "#2f6f96",
+  "theme": "system",
+  "cssTheme": "Border",
+  "enabledCssSnippets": [
+    "qingyan-vault"
+  ],
+  "baseFontSize": 17,
+  "interfaceFontFamily": "-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
+  "textFontFamily": "-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
+  "monospaceFontFamily": "SFMono-Regular, Consolas, Liberation Mono, monospace"
+}

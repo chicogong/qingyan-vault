@@ -1,0 +1,74 @@
+filters:
+  and:
+    - file.ext == "md"
+    - file.name != "README"
+    - not:
+        - file.inFolder("Templates")
+        - file.inFolder("Archive")
+properties:
+  file.name:
+    displayName: 标题
+  note.type:
+    displayName: 类型
+  note.status:
+    displayName: 状态
+  note.created:
+    displayName: 创建日期
+  file.tags:
+    displayName: 标签
+views:
+  - type: table
+    name: 全部知识
+    order:
+      - file.name
+      - type
+      - status
+      - created
+      - file.tags
+  - type: table
+    name: 进行中的项目
+    filters:
+      and:
+        - file.inFolder("Projects")
+        - note.status != "done"
+    order:
+      - file.name
+      - status
+      - created
+  - type: table
+    name: 长期知识
+    filters:
+      and:
+        - file.inFolder("Notes")
+    order:
+      - file.name
+      - status
+      - created
+  - type: table
+    name: 待整理
+    filters:
+      and:
+        - file.inFolder("Inbox")
+    order:
+      - file.name
+      - created
+      - file.tags
+  - type: table
+    name: 来源架
+    filters:
+      and:
+        - file.inFolder("Sources")
+    order:
+      - file.name
+      - created
+      - file.tags
+  - type: table
+    name: 回顾
+    filters:
+      and:
+        - file.inFolder("Review")
+        - file.name != "README"
+    order:
+      - file.name
+      - created
+      - file.tags

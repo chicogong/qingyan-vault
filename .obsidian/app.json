@@ -1,0 +1,24 @@
+{
+  "alwaysUpdateLinks": true,
+  "attachmentFolderPath": "Attachments",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "Inbox",
+  "newLinkFormat": "shortest",
+  "propertiesInDocument": "hidden",
+  "readableLineLength": true,
+  "showUnsupportedFiles": false,
+  "userIgnoreFilters": [
+    "docs/",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "CHANGELOG.md",
+    "README.en.md",
+    "ROADMAP.md",
+    "SECURITY.md",
+    "VERSION"
+  ],
+  "useMarkdownLinks": false,
+  "defaultViewMode": "preview"
+}

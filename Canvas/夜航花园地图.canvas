@@ -1,0 +1,17 @@
+{
+	"nodes":[
+		{"id":"route-question","type":"text","text":"How might three pools of light make a whole route memorable?","x":-620,"y":-80,"width":300,"height":150,"color":"5"},
+		{"id":"source-fieldnote","type":"file","file":"Sources/月光花园观察.md","x":-210,"y":-260,"width":360,"height":240,"color":"4"},
+		{"id":"note-anchors","type":"file","file":"Notes/三个锚点让路线更易记.md","x":-210,"y":80,"width":360,"height":220,"color":"6"},
+		{"id":"project-lantern","type":"file","file":"Projects/夜航花园.md","x":270,"y":-170,"width":390,"height":280,"color":"3"},
+		{"id":"moc-calm","type":"file","file":"MOCs/平静体验设计地图.md","x":300,"y":190,"width":350,"height":220,"color":"2"},
+		{"id":"canvas-key","type":"text","text":"QUESTION → SOURCE → NOTE → PROJECT\n\nThe MOC keeps the idea findable from another direction.","x":-600,"y":230,"width":290,"height":150}
+	],
+	"edges":[
+		{"id":"edge-question-source","fromNode":"route-question","fromSide":"right","toNode":"source-fieldnote","toSide":"left","label":"look for evidence"},
+		{"id":"edge-source-note","fromNode":"source-fieldnote","fromSide":"bottom","toNode":"note-anchors","toSide":"top","label":"write in your own words"},
+		{"id":"edge-note-project","fromNode":"note-anchors","fromSide":"right","toNode":"project-lantern","toSide":"left","label":"make it useful"},
+		{"id":"edge-note-moc","fromNode":"note-anchors","fromSide":"right","toNode":"moc-calm","toSide":"left","label":"make it findable"},
+		{"id":"edge-project-moc","fromNode":"project-lantern","fromSide":"bottom","toNode":"moc-calm","toSide":"top"}
+	]
+}

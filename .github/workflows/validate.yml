@@ -1,0 +1,26 @@
+name: Validate Qingyan Vault
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  vault:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate source Vault
+        run: ./.starter-tools/self-check.sh
+      - name: Build and validate release archive
+        run: ./.starter-tools/build-release.py --check
+      - name: Upload release candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: qingyan-vault-${{ github.sha }}
+          path: dist/qingyan-vault-*.zip
+          if-no-files-found: error

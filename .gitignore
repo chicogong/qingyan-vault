@@ -1,0 +1,8 @@
+.DS_Store
+dist/
+__pycache__/
+*.pyc
+.obsidian/cache/
+.obsidian/plugins/
+.obsidian/workspace-mobile.json
+.obsidian/sync.json

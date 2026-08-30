@@ -1,0 +1,379 @@
+/* Obsidian Agent Starter · 夜航知识图
+   Offline, system-font-only presentation layer. */
+
+body {
+  --oas-ink: #152839;
+  --oas-muted: #5e7181;
+  --oas-surface: #f5f9fb;
+  --oas-surface-strong: #eaf3f7;
+  --oas-blue: #236d96;
+  --oas-sky: #5ca6c8;
+  --oas-gold: #8b5a08;
+  --oas-coral: #bb5c50;
+  --oas-line: color-mix(in srgb, var(--oas-blue) 24%, transparent);
+  --oas-display: "Iowan Old Style", Charter, "Songti SC", Georgia, serif;
+  --oas-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+  --link-color: var(--oas-blue);
+  --link-color-hover: var(--oas-coral);
+  --interactive-accent: var(--oas-blue);
+}
+
+.theme-dark {
+  --oas-ink: #e2f0f4;
+  --oas-muted: #9eb1bb;
+  --oas-surface: #10232d;
+  --oas-surface-strong: #17313d;
+  --oas-blue: #79c4df;
+  --oas-sky: #55a9c9;
+  --oas-gold: #f0c36e;
+  --oas-coral: #ef9587;
+  --oas-line: color-mix(in srgb, var(--oas-blue) 34%, transparent);
+}
+
+/* Make the packaged workspace feel intentional without replacing Obsidian. */
+.workspace-tab-header.is-active,
+.nav-file-title.is-active {
+  color: var(--oas-blue);
+}
+
+.nav-file-title.is-active {
+  background: color-mix(in srgb, var(--oas-blue) 11%, transparent);
+}
+
+/* Keep repository governance out of the everyday knowledge navigation.
+   The files remain in the downloaded folder and on GitHub. */
+.nav-folder-title[data-path="docs"],
+.nav-file-title[data-path="AGENTS.md"],
+.nav-file-title[data-path="CLAUDE.md"],
+.nav-file-title[data-path="CODE_OF_CONDUCT.md"],
+.nav-file-title[data-path="CONTRIBUTING.md"],
+.nav-file-title[data-path="README.en.md"],
+.nav-file-title[data-path="ROADMAP.md"],
+.nav-file-title[data-path="SECURITY.md"] {
+  display: none;
+}
+
+.starter-home.markdown-preview-view,
+.starter-home.markdown-source-view.mod-cm6 .cm-scroller {
+  background:
+    radial-gradient(circle at 89% 8%, color-mix(in srgb, var(--oas-sky) 14%, transparent), transparent 24rem),
+    linear-gradient(180deg, color-mix(in srgb, var(--oas-surface) 64%, transparent), transparent 28rem),
+    var(--background-primary);
+  font-family: var(--oas-body);
+}
+
+.starter-home .markdown-preview-sizer,
+.starter-home.markdown-source-view.mod-cm6 .cm-contentContainer {
+  max-width: 860px;
+  padding-bottom: 6rem;
+}
+
+.starter-home.markdown-source-view.mod-cm6 .cm-editor,
+.starter-home.markdown-source-view.mod-cm6 .cm-editor.cm-focused {
+  outline: none !important;
+}
+
+.starter-home .inline-title {
+  display: none;
+}
+
+/* Home is an entry point; properties remain available in source/sidebar. */
+.starter-home .metadata-container,
+.starter-guide .metadata-container {
+  display: none;
+}
+
+.starter-home h1 {
+  max-width: 12ch;
+  margin: 2.1rem 0 0.7rem;
+  color: var(--oas-ink);
+  font-family: var(--oas-display);
+  font-size: clamp(2.45rem, 5.8vw, 3.85rem);
+  font-weight: 650;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.starter-kicker {
+  display: block;
+  margin: -0.25rem 0 1.2rem;
+  color: var(--text-muted);
+  font-family: var(--font-monospace);
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+}
+
+.starter-home.markdown-source-view.mod-cm6 .HyperMD-header-1 {
+  max-width: 12ch;
+  margin: 2rem 0 0.7rem;
+  color: var(--oas-ink);
+  font-family: var(--oas-display);
+  font-size: clamp(2.45rem, 5.8vw, 3.85rem);
+  font-weight: 650;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+}
+
+.starter-home h2 {
+  margin-top: 2.15rem;
+  padding-bottom: 0.48rem;
+  border-bottom: 1px solid var(--oas-line);
+  color: var(--oas-ink);
+  font-family: var(--oas-body);
+  font-size: 0.78rem;
+  font-weight: 760;
+  letter-spacing: 0.15em;
+}
+
+.starter-home.markdown-source-view.mod-cm6 .HyperMD-header-2 {
+  margin-top: 1.75rem;
+  padding-bottom: 0.48rem;
+  border-bottom: 1px solid var(--oas-line);
+  color: var(--oas-ink);
+  font-family: var(--oas-body);
+  font-size: 0.9rem;
+  font-weight: 760;
+  letter-spacing: 0.12em;
+}
+
+.starter-home p,
+.starter-home li {
+  color: var(--text-normal);
+  line-height: 1.68;
+}
+
+.starter-home a.internal-link,
+.starter-guide a.internal-link {
+  color: var(--oas-blue);
+  font-weight: 650;
+  text-decoration: none;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.starter-home a.internal-link:hover,
+.starter-home a.internal-link:focus-visible,
+.starter-guide a.internal-link:hover,
+.starter-guide a.internal-link:focus-visible {
+  color: var(--oas-coral);
+  text-decoration: underline;
+}
+
+.starter-home a:focus-visible,
+.starter-home button:focus-visible,
+.starter-guide a:focus-visible,
+.starter-guide button:focus-visible {
+  outline: 2px solid var(--oas-sky);
+  outline-offset: 3px;
+}
+
+.starter-home .callout {
+  border: 1px solid var(--oas-line);
+  border-radius: 14px;
+  box-shadow: none;
+}
+
+.starter-home .callout[data-callout="hero"] {
+  --callout-color: 57, 128, 166;
+  --callout-icon: lucide-sparkles;
+  margin: 1.4rem 0 0.9rem;
+  padding: 0.4rem 0.55rem;
+  background: color-mix(in srgb, var(--oas-surface-strong) 80%, transparent);
+}
+
+.starter-home .callout[data-callout="hero"] .callout-title {
+  color: var(--oas-gold);
+  font-family: var(--oas-display);
+  font-size: 1.1rem;
+  font-weight: 680;
+}
+
+/* Signature element: a quiet constellation route, not a generic dashboard card. */
+.starter-home .callout[data-callout="route"] {
+  --callout-color: 63, 139, 177;
+  --callout-icon: lucide-route;
+  position: relative;
+  overflow: hidden;
+  margin: 0.9rem 0 2rem;
+  background:
+    radial-gradient(circle at 88% 28%, var(--oas-sky) 0 2px, transparent 3px),
+    radial-gradient(circle at 80% 68%, var(--oas-gold) 0 2px, transparent 3px),
+    radial-gradient(circle at 94% 82%, var(--oas-coral) 0 2px, transparent 3px),
+    color-mix(in srgb, var(--oas-surface) 42%, transparent);
+}
+
+.starter-home .callout[data-callout="route"]::after {
+  position: absolute;
+  right: -1.4rem;
+  bottom: -3.25rem;
+  width: 8.2rem;
+  height: 8.2rem;
+  border: 1px solid var(--oas-line);
+  border-radius: 50%;
+  content: "";
+}
+
+.starter-home .callout[data-callout="launch"] {
+  --callout-color: 139, 90, 8;
+  --callout-icon: lucide-sunrise;
+  margin: 1rem 0 2.1rem;
+  border-color: color-mix(in srgb, var(--oas-gold) 38%, transparent);
+  background: color-mix(in srgb, var(--oas-gold) 8%, transparent);
+}
+
+.starter-home .callout[data-callout="launch"] .callout-title {
+  color: var(--oas-gold);
+  font-size: 0.78rem;
+  font-weight: 760;
+  letter-spacing: 0.12em;
+}
+
+.starter-home .callout[data-callout="launch"] .callout-content {
+  font-size: 0.94rem;
+}
+
+/* The cockpit is a route, not a generic card grid. The columns describe
+   the four recurring moves in the knowledge loop. */
+.starter-home table {
+  width: 100%;
+  margin: 0.8rem 0 1rem;
+  border-collapse: separate;
+  border: 1px solid var(--oas-line);
+  border-radius: 14px;
+  border-spacing: 0;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--oas-surface) 44%, transparent);
+  table-layout: fixed;
+}
+
+.starter-home th {
+  padding: 0.72rem 0.8rem 0.55rem;
+  border: 0;
+  border-right: 1px solid var(--oas-line);
+  color: var(--oas-gold);
+  font-size: 0.72rem;
+  font-weight: 760;
+  letter-spacing: 0.12em;
+  text-align: left;
+}
+
+.starter-home td {
+  padding: 0.62rem 0.8rem;
+  border: 0;
+  border-right: 1px solid var(--oas-line);
+  vertical-align: top;
+}
+
+.starter-home th:last-child,
+.starter-home td:last-child {
+  border-right: 0;
+}
+
+.starter-home tbody tr:last-child td {
+  padding-top: 0.15rem;
+  padding-bottom: 0.8rem;
+  color: var(--oas-muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.starter-home .callout[data-callout="tip"] {
+  --callout-color: 187, 92, 80;
+  --callout-icon: lucide-compass;
+  margin-top: 2rem;
+  background: color-mix(in srgb, var(--oas-coral) 7%, transparent);
+}
+
+.starter-home ul {
+  padding-left: 1.15rem;
+}
+
+.starter-home li {
+  margin-block: 0.58rem;
+}
+
+.starter-home .block-language-query {
+  border: 1px solid var(--oas-line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--oas-surface-strong) 55%, transparent);
+}
+
+.starter-guide.markdown-preview-view,
+.starter-guide.markdown-source-view.mod-cm6 .cm-scroller {
+  font-family: var(--oas-body);
+}
+
+.starter-guide .markdown-preview-sizer,
+.starter-guide.markdown-source-view.mod-cm6 .cm-contentContainer {
+  max-width: 780px;
+  padding-bottom: 6rem;
+}
+
+.starter-guide h1 {
+  margin-top: 2rem;
+  color: var(--oas-ink);
+  font-family: var(--oas-display);
+  font-size: clamp(2.1rem, 5vw, 3.25rem);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+}
+
+.starter-guide h2 {
+  margin-top: 2rem;
+  color: var(--oas-blue);
+  font-size: 1.05rem;
+}
+
+.starter-guide table {
+  font-size: 0.92rem;
+}
+
+@media (max-width: 700px) {
+  .starter-home .markdown-preview-sizer,
+  .starter-guide .markdown-preview-sizer {
+    padding-inline: 18px;
+  }
+
+  .starter-home h1 {
+    max-width: 11ch;
+    margin-top: 1.1rem;
+    font-size: 2.55rem;
+  }
+
+  .starter-home h2 {
+    margin-top: 1.65rem;
+  }
+
+  .starter-home .callout {
+    border-radius: 12px;
+  }
+
+  .starter-home .callout[data-callout="route"] {
+    background: color-mix(in srgb, var(--oas-surface) 42%, transparent);
+  }
+
+  .starter-home table {
+    display: block;
+    overflow-x: auto;
+    white-space: normal;
+  }
+
+  .starter-home th,
+  .starter-home td {
+    min-width: 9.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .starter-home *,
+  .starter-home *::before,
+  .starter-home *::after,
+  .starter-guide *,
+  .starter-guide *::before,
+  .starter-guide *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

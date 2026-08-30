@@ -1,0 +1,33 @@
+name: Bug 报告
+description: 报告可复现的首页、模板、链接、主题或发行包问题
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: textarea
+    id: result
+    attributes:
+      label: 发生了什么
+      description: 请描述实际结果和预期结果，不要上传私人 Vault。
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 最小复现步骤
+      description: 从 Release ZIP 或干净克隆开始，列出最少步骤。
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 环境
+      placeholder: macOS 15 / Windows 11，Obsidian 1.x，Qingyan Vault 版本
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: 隐私确认
+      options:
+        - label: 我已移除笔记正文、用户名、绝对路径、凭据和私人截图
+          required: true
