@@ -268,6 +268,9 @@ def main() -> int:
     for runtime_name in ("未命名.canvas", "未命名.base", "workspace-mobile.json"):
         if runtime_name in workspace_text:
             fail(f"workspace contains runtime scratch entry: {runtime_name}", failures)
+    for source_only in ('"dist', '"docs', '".github'):
+        if source_only in workspace_text:
+            fail(f"workspace contains source-only or missing release entry: {source_only}", failures)
 
     symlinks = [
         path

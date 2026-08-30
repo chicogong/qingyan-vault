@@ -189,6 +189,8 @@
   },
   "active": "starter-home",
   "lastOpenFiles": [
+    "docs/releases/0.1.0-alpha.2.md",
+    "dist/SHA256SUMS",
     "docs/releases/0.1.0-alpha.1.md",
     "docs/releases",
     "dist/qingyan-vault-0.1.0-alpha.1.zip",
@@ -223,7 +225,6 @@
     "Agent/草稿",
     "Agent/反馈",
     "Agent/交接",
-    "Agent",
-    "Guides"
+    "Agent"
   ]
 }

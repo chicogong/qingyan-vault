@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.0-alpha.2 — 2026-08-30
+
+- 清理首次真实打开产生的源码目录最近文件引用。
+- 自检新增 `dist/`、`docs/` 与 `.github/` 工作区泄漏阻断。
+- 发行包继续默认打开 `Home.md`，不引用包内不存在的文件。
+
 ## 0.1.0-alpha.1 — 2026-08-30
 
 - 首次公开 Qingyan Vault 中文 Agent-native Obsidian 模板。
