@@ -189,12 +189,6 @@
   },
   "active": "starter-home",
   "lastOpenFiles": [
-    "docs/releases/0.1.0-alpha.2.md",
-    "dist/SHA256SUMS",
-    "docs/releases/0.1.0-alpha.1.md",
-    "docs/releases",
-    "dist/qingyan-vault-0.1.0-alpha.1.zip",
-    "dist",
     "Home.md",
     "开始使用.md",
     "知识总览.base",
@@ -216,15 +210,10 @@
     "Guides/把它变成你的.md",
     "MOCs/平静体验设计地图.md",
     "README.en.md",
-    "docs/RESEARCH.md",
-    "docs/OPEN_SOURCE_PLAN.md",
-    "CODE_OF_CONDUCT.md",
-    "SECURITY.md",
-    "CONTRIBUTING.md",
-    "docs",
     "Agent/草稿",
     "Agent/反馈",
     "Agent/交接",
-    "Agent"
+    "Agent",
+    "Guides"
   ]
 }
