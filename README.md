@@ -1,10 +1,10 @@
-# Qingyan Vault｜青砚知识库
+# Qingyan Vault
 
 [简体中文](README.md) · [English](README.en.md)
 
-**开箱即用的 Agent-native Obsidian Vault：人负责判断与定稿，Agent 负责检索、整理和起草。**
+**Agent-native Obsidian Vault：人负责判断与定稿，Agent 负责检索、整理和起草。**
 
-内容始终保存在本地 Markdown 中。无需账号、无需网络、无需模型、无需社区插件；下载 Release ZIP 后，用 Obsidian 打开文件夹即可使用。
+内容始终保存在本地 Markdown 中。无需账号、无需网络、无需模型；发行包只内置一个经过审计的第一方动态首页插件。下载 Release ZIP 后，用 Obsidian 打开文件夹即可使用。
 
 ![Qingyan Vault 中文浅色首页](.github/assets/home-light.png)
 
@@ -22,14 +22,14 @@
 
 1. 从 [Releases](https://github.com/chicogong/qingyan-vault/releases) 下载 `qingyan-vault-*.zip` 并解压。
 2. 在 Obsidian 选择**打开本地仓库**，选中解压后的文件夹。
-3. 首页会自动打开；点击[[开始使用|用 60 秒跑通一次]]。
+3. 首次出现插件信任提示时，选择**信任仓库作者并启用插件**，动态首页会自动打开；不启用也可使用静态 `Home.md`。
 4. 写下一条想法，把它连接到项目或知识地图，再从首页重新找到它。
 
 如果你使用 Git，也可以克隆仓库后直接用 Obsidian 打开根目录。
 
 ## 里面有什么
 
-- **每天可用的首页**：今日入口、Inbox、项目下一步、知识总览与回顾。
+- **Homepage Enhanced 类型的动态首页**：时间与问候、快捷捕捉、最近编辑、Inbox、项目下一步和知识重访。
 - **完整合成示例**：从来源、自己的判断、项目到知识地图和每周回顾。
 - **中文模板**：每日笔记、来源、知识笔记、项目、知识地图和每周回顾。
 - **Agent 协作协议**：统一 `AGENTS.md`、Claude 轻量适配、隔离草稿、交接与反馈。
@@ -65,9 +65,11 @@
 
 Qingyan Vault 是唯一面向用户的知识产品；LWC 在这里承担可替换的审核引擎，不要求新用户先理解 hash、Evidence Ledger 或 Proposal。
 
-## 为什么默认不装社区插件
+## 为什么只内置一个第一方插件
 
-插件全家桶会增加安装、权限、联网、升级和跨平台风险。Qingyan Core 只使用 Obsidian 核心能力；所有可选增强都必须写明权限、维护状态、卸载方式和关闭后的降级行为。关闭主题或不使用任何 Pack 后，Markdown、WikiLinks、Bases 和 Canvas 仍然可读。
+插件全家桶会增加安装、权限、联网、升级和跨平台风险。Qingyan Vault 只内置 `Qingyan Vault Homepage`：它在本地读取文件元数据和 Markdown，只有点击“捕捉线索”时才写入 `Inbox/`，不联网、不调用模型、不发送遥测。关闭插件后，静态 `Home.md`、Markdown、WikiLinks、Bases 和 Canvas 仍然可读。
+
+Obsidian 会把任何随 Vault 分发的可执行插件都视为社区插件，因此首次打开会显示信任提示。只从本仓库 Release 下载；若暂不信任，选择安全模式即可继续使用静态版。
 
 ## 验证
 
@@ -76,7 +78,7 @@ Qingyan Vault 是唯一面向用户的知识产品；LWC 在这里承担可替�
 ./.starter-tools/build-release.py --check
 ```
 
-检查覆盖目录、核心设置、WikiLinks、Canvas、合成来源、绝对路径、凭据特征、第三方许可、社区插件缺失、工作区首页和发行包内容。GitHub Actions 会在每次提交和 PR 中运行同一检查。
+检查覆盖目录、核心设置、WikiLinks、Canvas、合成来源、绝对路径、凭据特征、第三方许可、第一方插件白名单与无网络调用、工作区首页和发行包内容。GitHub Actions 会在每次提交和 PR 中运行同一检查。
 
 当前验证证明仓库和发行包可复制、可降级，并在本机 Obsidian 中打开；发布后的 Issue、下载和复现证据将用于继续校正产品，不虚构用户留存。
 

@@ -8,9 +8,9 @@ tags:
   - starter/home
 ---
 
-# 青砚
+# Qingyan Vault
 
-<span class="qy-kicker">QINGYAN VAULT · LOCAL-FIRST</span>
+<span class="qy-kicker">AGENT-NATIVE OBSIDIAN VAULT · STATIC FALLBACK</span>
 <span class="qy-deck">把散落的线索，磨成可以再次使用的知识。人决定什么值得留下，Agent 帮你整理来路。</span>
 
 > [!desk] 今天，只推进一件事

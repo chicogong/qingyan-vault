@@ -28,6 +28,7 @@ REQUIRED_DIRS = [
     "Agent/反馈",
     "docs",
     ".github/assets",
+    ".obsidian/plugins/qingyan-homepage",
 ]
 
 REQUIRED_FILES = [
@@ -59,6 +60,12 @@ REQUIRED_FILES = [
     ".obsidian/app.json",
     ".obsidian/appearance.json",
     ".obsidian/core-plugins.json",
+    ".obsidian/community-plugins.json",
+    ".obsidian/plugins/qingyan-homepage/manifest.json",
+    ".obsidian/plugins/qingyan-homepage/main.js",
+    ".obsidian/plugins/qingyan-homepage/styles.css",
+    ".obsidian/plugins/qingyan-homepage/README.md",
+    ".obsidian/plugins/qingyan-homepage/LICENSE",
     ".obsidian/snippets/qingyan-vault.css",
     ".obsidian/themes/Border/theme.css",
     ".obsidian/themes/Border/manifest.json",
@@ -92,7 +99,7 @@ FORBIDDEN_MARKERS = [
 ]
 
 INTENTIONAL_UNRESOLVED_LINKS = {"Inbox/My First Note"}
-TEXT_SUFFIXES = {".md", ".json", ".canvas", ".base", ".css"}
+TEXT_SUFFIXES = {".md", ".json", ".canvas", ".base", ".css", ".js"}
 IGNORED_PARTS = {".git", "dist", "__pycache__"}
 SECRET_PATTERN = re.compile(
     r"(?i)\b(api[_-]?key|access[_-]?token|client[_-]?secret|password)"
@@ -157,10 +164,36 @@ def main() -> int:
         passed("no Git metadata in distributable Vault")
 
     plugins_dir = ROOT / ".obsidian" / "plugins"
-    if plugins_dir.exists():
-        fail("community plugin directory must not be packaged", failures)
+    packaged_plugins = sorted(path.name for path in plugins_dir.iterdir() if path.is_dir()) if plugins_dir.exists() else []
+    if packaged_plugins == ["qingyan-homepage"]:
+        passed("only audited first-party plugin is packaged: qingyan-homepage")
     else:
-        passed("no packaged community plugins")
+        fail(f"unexpected packaged plugins: {packaged_plugins}", failures)
+
+    community_plugins_path = ROOT / ".obsidian" / "community-plugins.json"
+    community_plugins = json.loads(community_plugins_path.read_text(encoding="utf-8"))
+    if community_plugins == ["qingyan-homepage"]:
+        passed("first-party homepage plugin enabled")
+    else:
+        fail(f"community plugin allowlist mismatch: {community_plugins}", failures)
+
+    homepage_manifest = json.loads(
+        (ROOT / ".obsidian" / "plugins" / "qingyan-homepage" / "manifest.json").read_text(encoding="utf-8")
+    )
+    if homepage_manifest.get("id") == "qingyan-homepage" and homepage_manifest.get("name") == "Qingyan Vault Homepage":
+        passed("Qingyan Vault Homepage identity")
+    else:
+        fail("Qingyan Vault Homepage manifest identity mismatch", failures)
+
+    homepage_source = (
+        ROOT / ".obsidian" / "plugins" / "qingyan-homepage" / "main.js"
+    ).read_text(encoding="utf-8")
+    network_markers = ("fetch(", "requestUrl(", "XMLHttpRequest", "WebSocket(")
+    present_network_markers = [marker for marker in network_markers if marker in homepage_source]
+    if not present_network_markers:
+        passed("first-party homepage has no network API calls")
+    else:
+        fail(f"homepage contains network API calls: {present_network_markers}", failures)
 
     core_plugins_path = ROOT / ".obsidian" / "core-plugins.json"
     core_plugins = json.loads(core_plugins_path.read_text(encoding="utf-8"))
@@ -259,7 +292,7 @@ def main() -> int:
         else:
             fail(f"home cockpit marker missing: {marker}", failures)
 
-    if "QINGYAN VAULT" in home and "OBSIDIAN AGENT STARTER" not in home:
+    if "# Qingyan Vault" in home and "OBSIDIAN AGENT STARTER" not in home:
         passed("Qingyan Vault home branding")
     else:
         fail("Home.md contains stale or missing product branding", failures)

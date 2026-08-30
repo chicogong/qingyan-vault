@@ -4,7 +4,7 @@
 
 **A ready-to-use, agent-native Obsidian vault where agents draft and people decide.**
 
-Everything remains local Markdown. The release archive needs no account, network connection, model, or community plugin: unzip it and open the folder in Obsidian.
+Everything remains local Markdown. The release archive needs no account, network connection, or model. It includes one audited first-party dynamic homepage plugin; unzip it and open the folder in Obsidian.
 
 ![Qingyan Vault light home](.github/assets/home-light.png)
 
@@ -20,7 +20,7 @@ capture → connect → isolated agent draft → human acceptance → reuse
 
 1. Download and unzip the latest archive from [Releases](https://github.com/chicogong/qingyan-vault/releases).
 2. Open the extracted folder as an Obsidian vault.
-3. The Home note opens automatically; follow `开始使用.md`.
+3. At the first-run trust prompt, choose **Trust author and enable plugins** to open the dynamic homepage. Safe mode keeps the static `Home.md` fully usable.
 4. Point a file-based agent at the folder and ask it to read `AGENTS.md` before doing anything.
 
 ## Included
@@ -33,7 +33,9 @@ capture → connect → isolated agent draft → human acceptance → reuse
 
 ## Boundaries
 
-Markdown stays the source of truth. Qingyan Vault ships no LLM, chat UI, vector database, cloud sync, executable community plugin, or opaque automatic memory. Agents do not silently rewrite accepted knowledge. Strict Review is an optional engine, not a second user-facing product.
+Markdown stays the source of truth. Qingyan Vault ships no LLM, chat UI, vector database, cloud sync, third-party executable plugin, or opaque automatic memory. The bundled Qingyan Vault Homepage only reads local Vault metadata and Markdown; it performs no network calls. Agents do not silently rewrite accepted knowledge. Strict Review is an optional engine, not a second user-facing product.
+
+Obsidian treats executable code shipped inside any vault as a community plugin, so a first-run trust prompt is expected. Download only from this repository's Releases; safe mode is the no-code fallback.
 
 ## Verify
 

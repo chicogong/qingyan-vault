@@ -4,19 +4,19 @@
 
 ## 结论
 
-Qingyan Vault 应保持一个清楚的产品边界：**默认下载包是零社区依赖的知识工作台；动态主页、快捷捕捉和 Agent 工具作为可选增强包。** 插件数量不是卖点，第一次打开时“下一步是否明确”才是。
+Qingyan Vault 保持一个清楚的产品边界：**默认下载包包含一个第一方动态首页，其他插件仍是可选增强。** 插件数量不是卖点，第一次打开时“下一步是否明确”才是。
 
 | 既有资产 | 值得保留的能力 | 当前裁决 |
 | --- | --- | --- |
-| Homepage Enhanced | 快捷入口、最近文件、未完成任务、重新发现旧笔记 | 保留产品洞察；重做为更克制的 `Qingyan Home` 候选，不搬天气、格言、习惯、背词等 Personal OS 模块 |
+| Homepage Enhanced | 快捷入口、最近文件、未完成任务、重新发现旧笔记 | 已吸收并重写为 `Qingyan Vault Homepage`；不搬天气、格言、习惯、背词等 Personal OS 模块 |
 | Folder Quick Create | 在当前文件夹一键创建，动作短且容易理解 | 最适合作为第一个可选微插件；发布前补测试、作者信息、许可和卸载说明 |
 | Note Agent | Dry Run、范围选择、变更日志、人工确认 | 安全思路并入 Agent 协议与 Strict Review；旧版路径/模型规则不进入模板 |
 | AI Assistant | 对话、插入笔记、保存草稿、上下文切换 | 作为实验室集成保留，不默认安装；凭据、联网、模型硬编码和索引权限需要重构 |
 | ClaudeTerm | 在 Obsidian 侧栏运行 Codex、Claude Code 等 CLI | 仅列为桌面开发者增强；PTY、Python 和 Shell 权限不适合新用户默认开启 |
 
-## Qingyan Home 应该留下什么
+## 动态首页应该留下什么
 
-旧主页功能很多，但同时承担天气、倒计时、习惯、背词、任务、统计和知识回顾，首页很容易变成第二个 Personal OS。Qingyan Home 只保留四类与知识闭环直接相关的动态信息：
+旧主页功能很多，但同时承担天气、倒计时、习惯、背词、任务、统计和知识回顾，首页很容易变成第二个 Personal OS。Qingyan Vault Homepage 只保留四类与知识闭环直接相关的动态信息：
 
 1. **现在能做什么**：捕捉、继续一个项目、回顾、请 Agent 起草。
 2. **最近动过什么**：最近编辑的知识和项目，不用回忆文件夹。
@@ -27,9 +27,9 @@ Qingyan Vault 应保持一个清楚的产品边界：**默认下载包是零社�
 
 ## 发布顺序
 
-1. 先把静态 Home 的信息架构和明暗主题做到稳定。
+1. 已完成：静态 Home 降级页和明暗主题。
 2. 将 Folder Quick Create 整理为独立、可审计的小插件。
-3. 重新实现最小 Qingyan Home，只读聚合 Vault 元数据，不引入天气、账号或外部 API。
+3. 已完成：Qingyan Vault Homepage 只读聚合 Vault 元数据，不引入天气、账号或外部 API。
 4. 最后再评估 AI Assistant / ClaudeTerm；任何需要密钥、联网、Shell 或全库读取的能力都单独授权。
 
 ## Stop 条件

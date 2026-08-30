@@ -3,6 +3,8 @@ dist/
 __pycache__/
 *.pyc
 .obsidian/cache/
-.obsidian/plugins/
+.obsidian/plugins/*
+!.obsidian/plugins/qingyan-homepage/
+!.obsidian/plugins/qingyan-homepage/**
 .obsidian/workspace-mobile.json
 .obsidian/sync.json

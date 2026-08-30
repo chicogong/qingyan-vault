@@ -36,8 +36,6 @@ def included(path: Path) -> bool:
         len(relative.parts) < 2 or relative.parts[1] != "assets"
     ):
         return False
-    if ".obsidian" in relative.parts and "plugins" in relative.parts:
-        return False
     return path.is_file() and not path.is_symlink()
 
 
@@ -66,7 +64,10 @@ def verify(archive: Path) -> None:
                 for name in names
                 if "/.git/" in name
                 or "/dist/" in name
-                or "/.obsidian/plugins/" in name
+                or (
+                    "/.obsidian/plugins/" in name
+                    and "/.obsidian/plugins/qingyan-homepage/" not in name
+                )
                 or name.endswith("workspace-mobile.json")
             ]
             if forbidden:

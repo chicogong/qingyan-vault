@@ -39,7 +39,7 @@ Qingyan Vault 补的是这一层：
 | --- | --- | --- |
 | 人的工作区 | 普通 Obsidian 用户 | Inbox、来源、知识、项目、地图、回顾 |
 | Agent 工作区 | Codex、Claude、WorkBuddy 等 | 统一入口、草稿隔离、交接、反馈 |
-| 可视化层 | 人 | 青砚工作台主题、Bases、Canvas |
+| 可视化层 | 人 | Qingyan Vault Homepage、静态 Home、Bases、Canvas |
 | 严格审核层 | 重要或批量改动 | 可选接入 LLM Wiki Canvas，不进入默认安装，不暴露工程术语 |
 
 ## 北极星
