@@ -246,9 +246,14 @@ def main() -> int:
             passed(f"README references screenshot: {screenshot}")
         else:
             fail(f"README does not reference screenshot: {screenshot}", failures)
+        screenshot_path = ROOT / screenshot
+        if screenshot_path.is_file() and screenshot_path.read_bytes().startswith(b"\x89PNG\r\n\x1a\n"):
+            passed(f"real PNG screenshot: {screenshot}")
+        else:
+            fail(f"screenshot is not a real PNG: {screenshot}", failures)
 
     home = (ROOT / "Home.md").read_text(encoding="utf-8")
-    for marker in ("obsidian://daily", "task-todo:/./", "知识驾驶台", "Guides/把它变成你的"):
+    for marker in ("obsidian://daily", "task-todo:/./", "今天，只推进一件事", "Guides/把它变成你的"):
         if marker in home:
             passed(f"home cockpit marker: {marker}")
         else:
