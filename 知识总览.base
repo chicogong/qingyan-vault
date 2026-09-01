@@ -3,11 +3,11 @@ filters:
     - file.ext == "md"
     - file.name != "README"
     - or:
-        - file.inFolder("Inbox")
-        - file.inFolder("Sources")
-        - file.inFolder("Notes")
-        - file.inFolder("Projects")
-        - file.inFolder("MOCs")
+        - file.inFolder("收件箱")
+        - file.inFolder("来源")
+        - file.inFolder("知识")
+        - file.inFolder("项目")
+        - file.inFolder("知识地图")
 properties:
   file.name:
     displayName: 标题
@@ -32,7 +32,7 @@ views:
     name: 进行中的项目
     filters:
       and:
-        - file.inFolder("Projects")
+        - file.inFolder("项目")
         - note.status != "done"
     order:
       - file.name
@@ -42,7 +42,7 @@ views:
     name: 长期知识
     filters:
       and:
-        - file.inFolder("Notes")
+        - file.inFolder("知识")
     order:
       - file.name
       - status
@@ -51,7 +51,7 @@ views:
     name: 待整理
     filters:
       and:
-        - file.inFolder("Inbox")
+        - file.inFolder("收件箱")
     order:
       - file.name
       - created
@@ -60,7 +60,7 @@ views:
     name: 来源架
     filters:
       and:
-        - file.inFolder("Sources")
+        - file.inFolder("来源")
     order:
       - file.name
       - created
@@ -69,7 +69,7 @@ views:
     name: 回顾
     filters:
       and:
-        - file.inFolder("Review")
+        - file.inFolder("回顾")
         - file.name != "README"
     order:
       - file.name

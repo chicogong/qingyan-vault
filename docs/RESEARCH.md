@@ -1,6 +1,6 @@
 # 开源调研与产品取舍
 
-> 最近核验：2026-08-30。Stars 只作方向信号；最终判断同时考虑许可、近期维护、安装摩擦、Issue 和降级能力。
+> 最近核验：2026-09-01。Stars 只作方向信号；最终判断同时考虑许可、近期维护、安装摩擦、Issue 和降级能力。
 
 ## 结论
 
@@ -22,6 +22,10 @@ Agent 直接把普通 Markdown Vault 当作工作目录已经成为常见做法�
 | [SoRobby/ObsidianStarterVault](https://github.com/SoRobby/ObsidianStarterVault) | 约 382 Stars | 完整可工作的示例 Vault | Dataview/脚本成为首页的单点依赖 |
 | [InlitX/Obsidian-Dashboard-Gallery](https://github.com/InlitX/Obsidian-Dashboard-Gallery) | 约 686 Stars | 首页视觉示例与可复制 CSS | 把可复制美化当成长期差异化 |
 | [Vaultorial/obsidian-templates](https://github.com/Vaultorial/obsidian-templates) | 完整工作 Vault | 用真实合成示例代替空目录 | 同时提供太多互相竞争的信息架构 |
+| [TfTHacker/DashboardPlusPlus](https://github.com/TfTHacker/DashboardPlusPlus) | MIT、Markdown 首页 | 低依赖分组导航和明确入口 | 三栏链接墙成为产品本身 |
+| [kuzzh/obsidian-startpage](https://github.com/kuzzh/obsidian-startpage) | MIT、第一方启动页插件 | 搜索优先、最近与置顶内容 | 通用 SaaS 卡片造型 |
+| [ondreu/Hearth](https://github.com/ondreu/Hearth) | MIT、可配置工作台 | 继续工作和窄屏堆叠 | 自由组件、统计和集成墙扩大范围 |
+| [kepano/obsidian-minimal](https://github.com/kepano/obsidian-minimal) | MIT、成熟主题 | 字体、密度和应用外壳一致性 | 用换主题代替工作流设计 |
 | [khoj-ai/khoj](https://github.com/khoj-ai/khoj) | AGPL，约 36.8k Stars | 本地、自托管 AI second brain 的需求信号 | 在模板仓内重造服务、聊天和检索平台 |
 | [siyuan-note/siyuan](https://github.com/siyuan-note/siyuan) | AGPL，约 46k Stars | 完整本地优先知识产品和 CLI | 与成熟编辑器正面竞争 |
 | [logseq/logseq](https://github.com/logseq/logseq) | AGPL，约 44.7k Stars | 文件优先、Daily 和连接式工作 | 另造编辑器或专有格式 |
@@ -48,7 +52,7 @@ LLM Wiki Canvas 独立产品进入维护冻结；不删除代码，不伪造失�
 
 ## 产品边界
 
-Core：Home、Inbox、Sources、Notes、Projects、MOCs、Review、Templates、Bases、Canvas、统一 Agent 契约、合成示例、主题、自检和发行包。
+Core：Home、收件箱、来源、知识、项目、知识地图、回顾、模板、Bases、白板、统一 Agent 契约、合成示例、主题、自检和发行包。
 
 可选 Pack：Research、Creator、Project、Visual、Strict Review。只有公开问题或贡献证明需求后才开发。
 

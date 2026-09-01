@@ -11,14 +11,14 @@
   <p><a href="README.md">简体中文</a> · <a href="README.en.md">English</a></p>
 </div>
 
-![Qingyan Vault 中文浅色首页](.github/assets/home-light.png)
+![Qingyan Vault 中文浅色轻编辑台](.github/assets/home-light.png)
 
 ## 一分钟后，你已经在工作
 
 1. 从 [Releases](https://github.com/chicogong/qingyan-vault/releases) 下载并解压 `qingyan-vault-*.zip`。
 2. 在 Obsidian 选择**打开本地仓库**，选中解压后的文件夹。
 3. 信任并启用内置的第一方首页插件；不启用也能继续使用静态 `Home.md`。
-4. 点击**捕捉线索**，写下一句话；回到首页，它已经出现在 Inbox。
+4. 点击**收一条**，写下一句话；回到首页，它已经出现在收件箱。
 
 无需账号、无需网络、无需模型，也无需先配置插件。使用 Git 的人也可以直接克隆仓库并打开根目录。
 
@@ -32,7 +32,7 @@
 
 | 你真正关心的事 | Qingyan Vault 的做法 |
 | --- | --- |
-| 第一次打开会不会迷路 | 中文首页、语义目录、合成示例和 60 秒闭环已经配置好 |
+| 第一次打开会不会迷路 | 中文轻编辑台、原生目录、合成示例和 60 秒闭环已经配置好 |
 | AI 会不会改坏知识 | 默认只读；草稿隔离；事实、推断、待验证分开；正式知识由人接纳 |
 | 换模型或工具怎么办 | Markdown、WikiLinks、YAML、Bases 与 Canvas 是事实源，不绑定单一 Agent |
 | 不想运行插件怎么办 | 关闭第一方首页后，静态 Home、搜索、Bases、Canvas 和全部内容仍可用 |
@@ -45,29 +45,34 @@
 
 <table>
   <tr>
-    <td width="50%"><img src=".github/assets/workspace-shelf.png" alt="带语义标记的 Qingyan Vault 左侧目录"><br><sub><b>知识书架</b>：收、源、知、事、图、省与 Agent 草稿分区一眼可辨。</sub></td>
-    <td width="50%"><img src=".github/assets/capture-flow.png" alt="Qingyan Vault 捕捉线索编辑界面"><br><sub><b>捕捉即写</b>：点击后直接进入当前工作面，不堆标签、不再补点编辑器。</sub></td>
+    <td width="50%"><img src=".github/assets/workspace-shelf.png" alt="Qingyan Vault 轻编辑台与中文知识目录"><br><sub><b>轻编辑台</b>：待确认草稿、来源、人工定稿和项目下一步都在首屏；物理目录保留 Obsidian 原生文件夹。</sub></td>
+    <td width="50%"><img src=".github/assets/capture-flow.png" alt="Qingyan Vault 收件箱线索与中文链接"><br><sub><b>线索可回读</b>：收件箱内容沿来源、项目和知识地图继续推进，链接保持可追溯。</sub></td>
   </tr>
   <tr>
-    <td width="50%"><img src=".github/assets/knowledge-base.png" alt="Qingyan Vault 知识总览 Bases"><br><sub><b>核心 Bases</b>：按 Inbox、来源、长期知识和项目查看，不依赖 Dataview。</sub></td>
-    <td width="50%"><img src=".github/assets/home-dark.png" alt="Qingyan Vault 中文深色首页"><br><sub><b>完整明暗主题</b>：目录、首页、正文、表格、任务与键盘焦点使用同一视觉语言。</sub></td>
+    <td width="50%"><img src=".github/assets/knowledge-base.png" alt="Qingyan Vault 知识总览 Bases"><br><sub><b>核心 Bases</b>：按收件箱、来源、长期知识和项目查看，不依赖 Dataview。</sub></td>
+    <td width="50%"><img src=".github/assets/home-dark.png" alt="Qingyan Vault 中文深色轻编辑台"><br><sub><b>暗色轻编辑台</b>：与浅色使用相同的来源、草稿和人工决定语义；关闭插件后仍可回到静态 Home。</sub></td>
   </tr>
 </table>
+
+<p align="center">
+  <img src=".github/assets/home-narrow.png" width="398" alt="Qingyan Vault 窄面板单栏案台"><br>
+  <sub><b>窄面板保持顺序</b>：不足 600px 时，导航、草稿、项目上下文与来源边界依次收为单栏，不重叠也不隐藏证据。</sub>
+</p>
 
 ## 目录就是工作流
 
 | 目录 | 只负责一件事 |
 | --- | --- |
-| `Inbox/` | 先捕捉，还没想好归属也没关系 |
-| `Sources/` | 保存出处、日期、范围与可追溯摘要 |
-| `Notes/` | 用自己的话形成长期判断 |
-| `Projects/` | 把知识连接到有完成标准的结果 |
-| `MOCs/` | 给主题建立导航，不复制正文 |
-| `Review/` | 让旧知识在每日与每周节奏里重新产生作用 |
+| `收件箱/` | 先捕捉，还没想好归属也没关系 |
+| `来源/` | 保存出处、日期、范围与可追溯摘要 |
+| `知识/` | 用自己的话形成长期判断 |
+| `项目/` | 把知识连接到有完成标准的结果 |
+| `知识地图/` | 给主题建立导航，不复制正文 |
+| `回顾/` | 让旧知识在每日与每周节奏里重新产生作用 |
 | `Agent/草稿/` | 隔离 Agent 生成但尚未接纳的内容 |
-| `Templates/` | 来源、知识、项目、地图、日记与周回顾模板 |
+| `模板/` | 来源、知识、项目、地图、日记与周回顾模板 |
 
-完整操作见[用户使用手册](Guides/%E7%94%A8%E6%88%B7%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C.md)和[10 分钟个性化设置](Guides/%E6%8A%8A%E5%AE%83%E5%8F%98%E6%88%90%E4%BD%A0%E7%9A%84.md)。
+完整操作见[用户使用手册](指南/%E7%94%A8%E6%88%B7%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C.md)和[10 分钟个性化设置](指南/%E6%8A%8A%E5%AE%83%E5%8F%98%E6%88%90%E4%BD%A0%E7%9A%84.md)。
 
 ## Agent-native，不是 AI 接管
 
@@ -75,7 +80,7 @@
 - WorkBuddy、Qoder 等文件型 Agent 显式引用 `AGENTS.md` 即可共享边界。
 - 权限从 R0 只读、R1 隔离草稿、R2 定点写入到 R3 结构变更逐级授权。
 - 来源事实、模型推断和待验证内容必须分开；Agent 不静默移动、删除或发布。
-- 批量或重要改动可使用[严格审核](Guides/严格审核.md)，日常使用不暴露工程术语。
+- 批量或重要改动可使用[严格审核](指南/严格审核.md)，日常使用不暴露工程术语。
 
 示例指令：
 
@@ -84,13 +89,13 @@
 不要修改文件。列出已有事实、推断、待验证和最小建议。
 ```
 
-完整协议见[Agent 使用手册](Guides/Agent%20%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C.md)。
+完整协议见[Agent 使用手册](指南/Agent%20%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C.md)。
 
 ## 克制的插件策略
 
-发行包只启用一个经过审计的第一方插件 `Qingyan Vault Homepage`：它读取本地文件元数据和 Markdown，点击捕捉时才写入 `Inbox/`，没有网络调用、模型请求或遥测。Obsidian 会对随 Vault 分发的可执行插件显示首次信任提示；请只从本仓库 Release 下载，或用安全模式使用静态版。
+发行包只启用一个经过审计的第一方插件 `Qingyan Vault Homepage`：它读取本地文件元数据和 Markdown，点击捕捉时才写入 `收件箱/`，没有网络调用、模型请求或遥测。Obsidian 会对随 Vault 分发的可执行插件显示首次信任提示；请只从本仓库 Release 下载，或用安全模式使用静态版。
 
-Border 主题负责成熟应用外壳，Qingyan CSS 负责首页、知识书架和正文视觉；所有归因保留在 `THIRD_PARTY_NOTICES.md`。社区插件按真实摩擦再添加，建议见[插件与主题](Guides/插件与主题.md)。
+Border 主题负责成熟应用外壳，Qingyan CSS 负责首页、知识书架和正文视觉；所有归因保留在 `THIRD_PARTY_NOTICES.md`。社区插件按真实摩擦再添加，建议见[插件与主题](指南/插件与主题.md)。
 
 ## 验证与开源边界
 

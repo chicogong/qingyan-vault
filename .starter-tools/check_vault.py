@@ -7,22 +7,23 @@ import json
 import re
 import sys
 from pathlib import Path
+from urllib.parse import unquote
 
 
 ROOT = Path(__file__).resolve().parent.parent
 
 REQUIRED_DIRS = [
-    "Inbox",
-    "Sources",
-    "Notes",
-    "Projects",
-    "MOCs",
-    "Review",
-    "Archive",
-    "Templates",
-    "Canvas",
-    "Attachments",
-    "Guides",
+    "收件箱",
+    "来源",
+    "知识",
+    "项目",
+    "知识地图",
+    "回顾",
+    "归档",
+    "模板",
+    "白板",
+    "附件",
+    "指南",
     "Agent/草稿",
     "Agent/交接",
     "Agent/反馈",
@@ -44,18 +45,18 @@ REQUIRED_FILES = [
     "CONTRIBUTING.md",
     "SECURITY.md",
     "CODE_OF_CONDUCT.md",
-    "Guides/用户使用手册.md",
-    "Guides/Agent 使用手册.md",
-    "Guides/严格审核.md",
-    "Guides/插件与主题.md",
-    "Guides/案例与设计取舍.md",
-    "Guides/把它变成你的.md",
+    "指南/用户使用手册.md",
+    "指南/Agent 使用手册.md",
+    "指南/严格审核.md",
+    "指南/插件与主题.md",
+    "指南/案例与设计取舍.md",
+    "指南/把它变成你的.md",
     "Agent/README.md",
-    "Review/每日与每周节奏.md",
+    "回顾/每日与每周节奏.md",
     "docs/PRODUCT.md",
     "docs/RESEARCH.md",
     "docs/OPEN_SOURCE_PLAN.md",
-    "Canvas/夜航花园地图.canvas",
+    "白板/夜航花园地图.canvas",
     "知识总览.base",
     ".obsidian/app.json",
     ".obsidian/appearance.json",
@@ -74,6 +75,7 @@ REQUIRED_FILES = [
     ".obsidian/workspace.json",
     ".github/assets/home-light.png",
     ".github/assets/home-dark.png",
+    ".github/assets/home-narrow.png",
     ".github/assets/workspace-shelf.png",
     ".github/assets/capture-flow.png",
     ".github/assets/knowledge-base.png",
@@ -102,7 +104,7 @@ FORBIDDEN_MARKERS = [
     "BEGIN OPENSSH PRIVATE KEY",
 ]
 
-INTENTIONAL_UNRESOLVED_LINKS = {"Inbox/My First Note"}
+INTENTIONAL_UNRESOLVED_LINKS: set[str] = set()
 TEXT_SUFFIXES = {".md", ".json", ".canvas", ".base", ".css", ".js"}
 IGNORED_PARTS = {".git", "dist", "__pycache__"}
 SECRET_PATTERN = re.compile(
@@ -205,7 +207,7 @@ def main() -> int:
         "single visible work surface": "const leaf = sourceLeaf || this.getContentLeaf();",
         "main workspace entry routing": "workspace.getMostRecentLeaf(workspace.rootSplit)",
         "official file navigation": "await leaf.openFile(file,",
-        "same-surface daily note": 'const folder = "Review/Daily";',
+        "same-surface daily note": 'const folder = "回顾/每日";',
         "active editor focus": "setActiveLeaf(leaf, { focus: true })",
         "source-mode capture": 'mode: "source"',
         "project task location": "line: task.line",
@@ -215,6 +217,57 @@ def main() -> int:
             passed(f"homepage workflow: {label}")
         else:
             fail(f"homepage workflow missing: {label}", failures)
+
+    homepage_styles = (
+        ROOT / ".obsidian" / "plugins" / "qingyan-homepage" / "styles.css"
+    ).read_text(encoding="utf-8")
+    review_source_markers = {
+        "quiet text-only product identity": 'text: "Qingyan Vault"',
+        "review queue is primary": "this.renderReviewDesk(primary, draftSummaries)",
+        "empty draft area collapses": "if (!draftSummaries.length) return;",
+        "source evidence is explicit": '"来源与边界"',
+        "human decision state is explicit": '"接纳边界"',
+        "search is a compact nav action": 'this.createNavAction(nav, "搜索", "⌘ K"',
+        "project next step is in first fold": '"下一步", task.text',
+    }
+    for label, marker in review_source_markers.items():
+        if marker in homepage_source:
+            passed(f"homepage review surface: {label}")
+        else:
+            fail(f"homepage review surface missing: {label}", failures)
+
+    review_style_markers = {
+        "disciplined reading width": "width: min(100%, 1160px)",
+        "local cross-platform font stack": '"PingFang SC", "Hiragino Sans GB"',
+        "native theme variables": "--qy-bg: var(--background-primary",
+        "compact action navigation": ".qy-dashboard .qy-nav-item",
+        "resume surface is responsive": ".qy-dashboard .qy-resume-row",
+        "draft emphasis is subtle": "--qy-draft-bg: color-mix",
+        "long draft titles clamp to two lines": "-webkit-line-clamp: 2",
+        "text actions keep accessible targets": "min-height: 44px",
+        "narrow layout uses a single column": "@container (max-width: 600px)",
+    }
+    for label, marker in review_style_markers.items():
+        if marker in homepage_styles:
+            passed(f"homepage review surface: {label}")
+        else:
+            fail(f"homepage review surface missing: {label}", failures)
+
+    stale_surface_markers = (
+        "formatClock(",
+        "qy-dashboard-hero",
+        "qy-search-launch",
+        "qy-logo-decision",
+        "今天，只推进一件事",
+        "今天，从哪里继续",
+    )
+    present_stale_markers = [
+        marker for marker in stale_surface_markers if marker in homepage_source or marker in homepage_styles
+    ]
+    if not present_stale_markers:
+        passed("homepage review surface has no retired hero or clock")
+    else:
+        fail(f"homepage still contains retired surface markers: {present_stale_markers}", failures)
 
     core_plugins_path = ROOT / ".obsidian" / "core-plugins.json"
     core_plugins = json.loads(core_plugins_path.read_text(encoding="utf-8"))
@@ -233,9 +286,9 @@ def main() -> int:
     expected_app_config = {
         "defaultViewMode": "preview",
         "newFileLocation": "folder",
-        "newFileFolderPath": "Inbox",
+        "newFileFolderPath": "收件箱",
         "propertiesInDocument": "hidden",
-        "attachmentFolderPath": "Attachments",
+        "attachmentFolderPath": "附件",
     }
     for key, expected in expected_app_config.items():
         if app_config.get(key) == expected:
@@ -285,7 +338,7 @@ def main() -> int:
         fail("app.json showInlineTitle must be false", failures)
 
     base_source = (ROOT / "知识总览.base").read_text(encoding="utf-8")
-    knowledge_folders = ("Inbox", "Sources", "Notes", "Projects", "MOCs")
+    knowledge_folders = ("收件箱", "来源", "知识", "项目", "知识地图")
     if all(f'file.inFolder("{folder}")' in base_source for folder in knowledge_folders):
         passed("knowledge base limited to production folders")
     else:
@@ -316,6 +369,7 @@ def main() -> int:
     for screenshot in (
         ".github/assets/home-light.png",
         ".github/assets/home-dark.png",
+        ".github/assets/home-narrow.png",
         ".github/assets/workspace-shelf.png",
         ".github/assets/capture-flow.png",
         ".github/assets/knowledge-base.png",
@@ -338,7 +392,13 @@ def main() -> int:
         fail("repository brand lockup is missing or invalid", failures)
 
     home = (ROOT / "Home.md").read_text(encoding="utf-8")
-    for marker in ("obsidian://daily", "task-todo:/./", "今天，只推进一件事", "Guides/把它变成你的"):
+    for marker in (
+        "obsidian://daily",
+        'path:"项目/" task-todo:/./',
+        'path:"收件箱/"',
+        "待你确认",
+        "指南/把它变成你的",
+    ):
         if marker in home:
             passed(f"home cockpit marker: {marker}")
         else:
@@ -358,6 +418,13 @@ def main() -> int:
     for runtime_name in ("未命名.canvas", "未命名.base", "workspace-mobile.json"):
         if runtime_name in workspace_text:
             fail(f"workspace contains runtime scratch entry: {runtime_name}", failures)
+    missing_recent_files = [
+        recent for recent in workspace.get("lastOpenFiles", []) if not (ROOT / recent).exists()
+    ]
+    if missing_recent_files:
+        fail(f"workspace contains missing recent files: {missing_recent_files}", failures)
+    else:
+        passed("workspace recent files all exist")
     for source_only in ('"dist', '"docs', '".github'):
         if source_only in workspace_text:
             fail(f"workspace contains source-only or missing release entry: {source_only}", failures)
@@ -397,8 +464,16 @@ def main() -> int:
             fail(f"credential-like assignment in {relative}", failures)
 
         if ".obsidian/snippets" in relative.as_posix() and path.suffix == ".css":
-            if re.search(r"@import|https?://|url\s*\(", text, re.I):
-                fail(f"local CSS snippet references an external or embedded asset: {relative}", failures)
+            css_without_urls = re.sub(r"url\s*\(\s*[^)]*?\s*\)", "", text, flags=re.I)
+            if re.search(r"@import|https?://", css_without_urls, re.I):
+                fail(f"local CSS snippet references an external asset: {relative}", failures)
+            for match in re.findall(r"url\s*\(\s*([^)]*?)\s*\)", text, re.I):
+                reference = match.strip(" \t\r\n\"'")
+                decoded = unquote(reference).lower()
+                allowed_svg = reference.lower().startswith("data:image/svg+xml,")
+                active_svg = any(marker in decoded for marker in ("<script", "onload=", "<foreignobject"))
+                if not allowed_svg or active_svg:
+                    fail(f"local CSS snippet contains an unsafe asset reference: {relative}", failures)
 
         if path.suffix == ".md":
             for target in re.findall(r"\[\[([^\]]+)\]\]", text):
@@ -411,13 +486,13 @@ def main() -> int:
             except json.JSONDecodeError as error:
                 fail(f"invalid JSON file {relative}: {error}", failures)
 
-    source_files = list((ROOT / "Sources").glob("*.md"))
+    source_files = list((ROOT / "来源").glob("*.md"))
     if source_files and all("synthetic: true" in path.read_text(encoding="utf-8") for path in source_files):
         passed("all example sources explicitly marked synthetic")
     else:
         fail("every example source must contain 'synthetic: true'", failures)
 
-    for canvas_path in (ROOT / "Canvas").glob("*.canvas"):
+    for canvas_path in (ROOT / "白板").glob("*.canvas"):
         try:
             canvas = json.loads(canvas_path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as error:

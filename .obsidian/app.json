@@ -1,9 +1,9 @@
 {
   "showInlineTitle": false,
   "alwaysUpdateLinks": true,
-  "attachmentFolderPath": "Attachments",
+  "attachmentFolderPath": "附件",
   "newFileLocation": "folder",
-  "newFileFolderPath": "Inbox",
+  "newFileFolderPath": "收件箱",
   "newLinkFormat": "shortest",
   "propertiesInDocument": "hidden",
   "readableLineLength": true,
