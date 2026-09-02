@@ -7,6 +7,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from typing import Optional
 from urllib.parse import unquote
 
 
@@ -145,6 +146,42 @@ def resolve_wikilink(target: str, markdown_files: list[Path]) -> bool:
     if candidate.with_suffix(".md").exists() or candidate.with_suffix(".canvas").exists():
         return True
     return any(path.stem == Path(target).name for path in markdown_files)
+
+
+def find_leaf(node: object, leaf_id: str) -> Optional[dict[str, object]]:
+    """Find one leaf by id within a workspace subtree."""
+    if not isinstance(node, dict):
+        return None
+    if node.get("type") == "leaf" and node.get("id") == leaf_id:
+        return node
+    children = node.get("children", [])
+    if not isinstance(children, list):
+        return None
+    for child in children:
+        leaf = find_leaf(child, leaf_id)
+        if leaf is not None:
+            return leaf
+    return None
+
+
+def opens_static_home_in_active_main_leaf(workspace: dict[str, object]) -> bool:
+    """Require the active leaf in the main workspace to open Home.md in preview."""
+    active_leaf_id = workspace.get("active")
+    if not isinstance(active_leaf_id, str):
+        return False
+    active_leaf = find_leaf(workspace.get("main"), active_leaf_id)
+    if active_leaf is None:
+        return False
+    view = active_leaf.get("state")
+    if not isinstance(view, dict) or view.get("type") != "markdown":
+        return False
+    view_state = view.get("state")
+    return (
+        isinstance(view_state, dict)
+        and view_state.get("file") == "Home.md"
+        and view_state.get("mode") == "preview"
+        and view_state.get("source") is False
+    )
 
 
 def main() -> int:
@@ -411,10 +448,43 @@ def main() -> int:
 
     workspace = json.loads((ROOT / ".obsidian" / "workspace.json").read_text(encoding="utf-8"))
     workspace_text = json.dumps(workspace, ensure_ascii=False)
-    if '"file": "Home.md"' in workspace_text and workspace.get("active") == "starter-home":
-        passed("sanitized workspace opens Home.md")
+    if opens_static_home_in_active_main_leaf(workspace):
+        passed("active main workspace leaf opens static Home.md in preview")
     else:
-        fail("workspace must open Home.md in the active starter tab", failures)
+        fail("active main workspace leaf must open static Home.md in preview", failures)
+
+    wrong_main_view_fixture = {
+        "main": {
+            "type": "split",
+            "children": [
+                {
+                    "type": "tabs",
+                    "children": [
+                        {
+                            "id": "starter-home",
+                            "type": "leaf",
+                            "state": {"type": "qingyan-homepage", "state": {}},
+                        }
+                    ],
+                }
+            ],
+        },
+        "right": {
+            "type": "split",
+            "children": [
+                {
+                    "id": "starter-backlinks",
+                    "type": "leaf",
+                    "state": {"type": "backlink", "state": {"file": "Home.md"}},
+                }
+            ],
+        },
+        "active": "starter-home",
+    }
+    if not opens_static_home_in_active_main_leaf(wrong_main_view_fixture):
+        passed("workspace negative fixture rejects Home.md found only in backlinks")
+    else:
+        fail("workspace negative fixture accepted the wrong main view", failures)
     for runtime_name in ("未命名.canvas", "未命名.base", "workspace-mobile.json"):
         if runtime_name in workspace_text:
             fail(f"workspace contains runtime scratch entry: {runtime_name}", failures)
