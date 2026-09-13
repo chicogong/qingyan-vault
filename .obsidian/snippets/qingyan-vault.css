@@ -93,7 +93,7 @@ body:has(.workspace-leaf.mod-active .starter-home) .mod-sidedock.mod-right-split
 }
 
 /* Keep project governance in Git without turning it into daily navigation. */
-.nav-folder-title[data-path="docs"],
+.nav-folder-title[data-path="维护"],
 .nav-folder-title[data-path="dist"],
 .nav-file-title[data-path="AGENTS.md"],
 .nav-file-title[data-path="CLAUDE.md"],
@@ -103,7 +103,7 @@ body:has(.workspace-leaf.mod-active .starter-home) .mod-sidedock.mod-right-split
 .nav-file-title[data-path="LICENSE"],
 .nav-file-title[data-path="README.md"],
 .nav-file-title[data-path="README.en.md"],
-.nav-file-title[data-path="ROADMAP.md"],
+.nav-file-title[data-path="规划.md"],
 .nav-file-title[data-path="SECURITY.md"],
 .nav-file-title[data-path="THIRD_PARTY_NOTICES.md"],
 .nav-file-title[data-path="VERSION"] {

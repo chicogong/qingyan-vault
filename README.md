@@ -99,6 +99,8 @@ Border 主题负责成熟应用外壳，Qingyan CSS 负责首页、知识书架�
 
 ## 验证与开源边界
 
+维护者或新会话接手：从 [维护交接](维护/交接.md) 开始；旧规划仅在需要追溯时阅读。
+
 ```sh
 ./.starter-tools/self-check.sh
 ./.starter-tools/build-release.py --check
@@ -110,7 +112,7 @@ Border 主题负责成熟应用外壳，Qingyan CSS 负责首页、知识书架�
 - 不内置聊天界面、向量数据库、云同步或不透明长期记忆。
 - 当前证据是本机 Obsidian 与干净发行包闭环；Windows、Linux、移动端及真实长期采用仍待验证。
 
-更多信息：[产品主旨](docs/PRODUCT.md) · [路线图](ROADMAP.md) · [开源规划](docs/OPEN_SOURCE_PLAN.md) · [安全策略](SECURITY.md) · [贡献指南](CONTRIBUTING.md)
+更多信息：[产品主旨](维护/产品.md) · [路线图](规划.md) · [开源规划](维护/发布.md) · [安全策略](SECURITY.md) · [贡献指南](CONTRIBUTING.md)
 
 ## License
 

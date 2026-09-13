@@ -28,7 +28,7 @@ REQUIRED_DIRS = [
     "Agent/草稿",
     "Agent/交接",
     "Agent/反馈",
-    "docs",
+    "维护",
     ".github/assets",
     ".obsidian/plugins/qingyan-homepage",
 ]
@@ -40,7 +40,7 @@ REQUIRED_FILES = [
     "README.en.md",
     "AGENTS.md",
     "CLAUDE.md",
-    "ROADMAP.md",
+    "规划.md",
     "CHANGELOG.md",
     "VERSION",
     "CONTRIBUTING.md",
@@ -54,9 +54,9 @@ REQUIRED_FILES = [
     "指南/把它变成你的.md",
     "Agent/README.md",
     "回顾/每日与每周节奏.md",
-    "docs/PRODUCT.md",
-    "docs/RESEARCH.md",
-    "docs/OPEN_SOURCE_PLAN.md",
+    "维护/产品.md",
+    "维护/调研.md",
+    "维护/发布.md",
     "白板/夜航花园地图.canvas",
     "知识总览.base",
     ".obsidian/app.json",
@@ -336,7 +336,7 @@ def main() -> int:
     expected_ignored_files = {
         ".github/",
         ".starter-tools/",
-        "docs/",
+        "维护/",
         "dist/",
         "AGENTS.md",
         "CLAUDE.md",
@@ -345,7 +345,7 @@ def main() -> int:
         "LICENSE",
         "README.md",
         "README.en.md",
-        "ROADMAP.md",
+        "规划.md",
         "SECURITY.md",
         "CHANGELOG.md",
         "THIRD_PARTY_NOTICES.md",
@@ -495,7 +495,7 @@ def main() -> int:
         fail(f"workspace contains missing recent files: {missing_recent_files}", failures)
     else:
         passed("workspace recent files all exist")
-    for source_only in ('"dist', '"docs', '".github'):
+    for source_only in ('"dist', '"维护', '".github'):
         if source_only in workspace_text:
             fail(f"workspace contains source-only or missing release entry: {source_only}", failures)
 

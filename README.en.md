@@ -66,7 +66,7 @@ The archive enables one audited first-party plugin, `Qingyan Vault Homepage`. It
 
 The repository uses synthetic examples only. Current evidence covers a clean release archive and local Obsidian testing; Windows, Linux, mobile, and real long-term adoption remain to be verified.
 
-See the [Chinese README](README.md), [product thesis](docs/PRODUCT.md), [roadmap](ROADMAP.md), [security policy](SECURITY.md), and [contribution guide](CONTRIBUTING.md).
+See the [Chinese README](README.md), [product thesis](维护/产品.md), [roadmap](规划.md), [security policy](SECURITY.md), and [contribution guide](CONTRIBUTING.md).
 
 ## License
 
