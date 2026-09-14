@@ -3,12 +3,12 @@ const { ItemView, MarkdownView, Notice, Plugin, TFile, setIcon } = require("obsi
 const VIEW_TYPE = "qingyan-homepage";
 const PRODUCT_NAME = "Qingyan Vault";
 const CONTENT_PREFIXES = [
-  "Inbox/",
-  "Sources/",
-  "Notes/",
-  "Projects/",
-  "MOCs/",
-  "Review/",
+  "收件箱/",
+  "来源/",
+  "知识/",
+  "项目/",
+  "知识地图/",
+  "回顾/",
 ];
 
 function isKnowledgeFile(file) {
@@ -23,31 +23,6 @@ function localDateKey(date) {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
-}
-
-function formatClock(date) {
-  return new Intl.DateTimeFormat("zh-CN", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(date);
-}
-
-function formatDate(date) {
-  return new Intl.DateTimeFormat("zh-CN", {
-    month: "long",
-    day: "numeric",
-    weekday: "long",
-  }).format(date);
-}
-
-function greetingFor(date) {
-  const hour = date.getHours();
-  if (hour < 6) return "夜深了";
-  if (hour < 11) return "早上好";
-  if (hour < 14) return "中午好";
-  if (hour < 18) return "下午好";
-  return "晚上好";
 }
 
 function relativeTime(timestamp) {
@@ -81,8 +56,8 @@ class QingyanHomepageView extends ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.plugin = plugin;
-    this.clockTimer = null;
     this.refreshTimer = null;
+    this.hasRendered = false;
   }
 
   getViewType() {
@@ -94,16 +69,14 @@ class QingyanHomepageView extends ItemView {
   }
 
   getIcon() {
-    return "layout-dashboard";
+    return "book-open";
   }
 
   async onOpen() {
     await this.render();
-    this.clockTimer = window.setInterval(() => this.updateClock(), 30 * 1000);
   }
 
   async onClose() {
-    if (this.clockTimer) window.clearInterval(this.clockTimer);
     if (this.refreshTimer) window.clearTimeout(this.refreshTimer);
   }
 
@@ -112,123 +85,196 @@ class QingyanHomepageView extends ItemView {
     this.refreshTimer = window.setTimeout(() => this.render(), 180);
   }
 
-  updateClock() {
-    const now = new Date();
-    this.contentEl.querySelectorAll("[data-qy-clock]").forEach((element) => {
-      element.setText(formatClock(now));
-    });
-    this.contentEl.querySelectorAll("[data-qy-date]").forEach((element) => {
-      element.setText(formatDate(now));
-    });
-  }
-
   async render() {
     const root = this.contentEl;
+    const shouldResetScroll = !this.hasRendered;
+    this.hasRendered = true;
     root.empty();
     root.addClass("qy-dashboard");
 
-    const files = this.app.vault.getMarkdownFiles().filter(isKnowledgeFile);
+    const markdownFiles = this.app.vault.getMarkdownFiles();
+    const files = markdownFiles.filter(isKnowledgeFile);
+    const sourceFiles = markdownFiles
+      .filter((file) => file.path.startsWith("来源/") && file.basename !== "README")
+      .sort((a, b) => b.stat.mtime - a.stat.mtime);
+    const draftFiles = markdownFiles
+      .filter((file) => file.path.startsWith("Agent/草稿/") && file.basename !== "README")
+      .sort((a, b) => b.stat.mtime - a.stat.mtime);
+    const draftSummaries = await Promise.all(draftFiles.map((file) => this.summarizeDraft(file)));
     const recent = [...files]
       .sort((a, b) => b.stat.mtime - a.stat.mtime)
       .slice(0, 6);
     const inboxFiles = files
-      .filter((file) => file.path.startsWith("Inbox/"))
+      .filter((file) => file.path.startsWith("收件箱/"))
       .sort((a, b) => b.stat.mtime - a.stat.mtime)
       .slice(0, 5);
-    const revisit = files
-      .filter((file) => file.path.startsWith("Notes/") || file.path.startsWith("Sources/"))
-      .sort((a, b) => a.stat.mtime - b.stat.mtime)
-      .slice(0, 3);
     const projectTasks = await this.collectProjectTasks();
 
     this.renderHeader(root);
-    this.renderHero(root, files, inboxFiles, projectTasks);
-    this.renderKnowledgeCurrent(root, files, inboxFiles, projectTasks);
 
-    const workbench = root.createDiv({ cls: "qy-dashboard-grid qy-dashboard-workbench" });
-    const primary = workbench.createDiv({ cls: "qy-dashboard-column qy-dashboard-primary" });
-    const secondary = workbench.createDiv({ cls: "qy-dashboard-column qy-dashboard-secondary" });
-
-    this.renderTaskSection(primary, projectTasks);
-    this.renderFileSection(secondary, "最近痕迹", "刚刚发生过的编辑", recent, "history");
-
-    const library = root.createDiv({ cls: "qy-dashboard-grid qy-dashboard-library" });
-    const inbox = library.createDiv({ cls: "qy-dashboard-column" });
-    const resurfacing = library.createDiv({ cls: "qy-dashboard-column" });
-    this.renderFileSection(inbox, "Inbox", "尚未决定去向", inboxFiles, "inbox");
-    this.renderFileSection(resurfacing, "重新遇见", "让旧知识回到眼前", revisit, "sparkles");
+    const desk = root.createDiv({ cls: "qy-desk-grid" });
+    const primary = desk.createDiv({ cls: "qy-desk-primary" });
+    const secondary = desk.createEl("aside", { cls: "qy-desk-aside" });
+    this.renderReviewDesk(primary, draftSummaries);
+    this.renderResumeDesk(primary, recent, projectTasks);
+    this.renderEvidenceDesk(secondary, sourceFiles, draftSummaries);
+    this.renderKnowledgeCurrent(secondary, files, inboxFiles, sourceFiles, projectTasks);
 
     const footer = root.createDiv({ cls: "qy-dashboard-footer" });
-    footer.createSpan({ text: "LOCAL MARKDOWN" });
+    footer.createSpan({ text: "本地 Markdown" });
     footer.createSpan({ text: "·" });
-    footer.createSpan({ text: "NO NETWORK" });
+    footer.createSpan({ text: "无网络调用" });
     footer.createSpan({ text: "·" });
-    footer.createSpan({ text: "HUMAN DECIDES" });
+    footer.createSpan({ text: "由人决定" });
+
+    if (shouldResetScroll) {
+      window.requestAnimationFrame(() => {
+        root.scrollTop = 0;
+      });
+    }
   }
 
   renderHeader(root) {
-    const now = new Date();
     const header = root.createEl("header", { cls: "qy-dashboard-header qy-brand-row" });
     const brand = header.createDiv({ cls: "qy-brand" });
-    brand.createSpan({ cls: "qy-brand-mark", text: "砚" });
     const brandText = brand.createDiv();
-    brandText.createEl("strong", { text: PRODUCT_NAME });
-    brandText.createSpan({ text: "Agent-native Obsidian Vault" });
+    brandText.createEl("strong", { text: "Qingyan Vault" });
+    brandText.createSpan({ text: "青砚 · Agent-native 知识案台" });
 
-    const time = header.createDiv({ cls: "qy-dashboard-time" });
-    time.createEl("strong", { text: formatClock(now), attr: { "data-qy-clock": "" } });
-    time.createSpan({ text: formatDate(now), attr: { "data-qy-date": "" } });
+    const nav = header.createEl("nav", { cls: "qy-nav", attr: { "aria-label": "首页操作" } });
+    this.createNavAction(nav, "搜索", "⌘ K", () => this.plugin.openSearch());
+    this.createNavAction(nav, "收一条", "", () => this.plugin.captureNote(this.leaf));
+    this.createNavAction(nav, "写今天", "", () => this.plugin.openDailyNote(this.leaf));
+    this.createNavAction(nav, "知识总览", "", () => this.plugin.openKnowledgeBase(this.leaf));
   }
 
-  renderHero(root, files, inboxFiles, projectTasks) {
-    const hero = root.createEl("section", { cls: "qy-dashboard-hero" });
-    const copy = hero.createDiv({ cls: "qy-hero-copy" });
-    const now = new Date();
-    copy.createSpan({ cls: "qy-hero-greeting", text: greetingFor(now) });
-    const title = copy.createEl("h1");
-    title.createSpan({ text: "把一条线索，" });
-    title.createSpan({ text: "推进到能再次使用。" });
-    copy.createEl("p", {
-      text: "先留下，再辨认，最后让它回到正在发生的事情里。",
-    });
-
-    const actions = copy.createDiv({ cls: "qy-quick-actions" });
-    this.createAction(actions, "收", "捕捉线索", "写入 Inbox", () => this.plugin.captureNote(this.leaf));
-    this.createAction(actions, "写", "写今天", "打开每日笔记", () => this.plugin.openDailyNote(this.leaf));
-    this.createAction(actions, "看", "知识总览", "打开 Bases", () => this.plugin.openKnowledgeBase(this.leaf));
-    this.createAction(actions, "找", "搜索", "查找全部笔记", () => this.plugin.openSearch());
-
-    const manifesto = hero.createDiv({ cls: "qy-hero-manifesto" });
-    manifesto.createSpan({ cls: "qy-manifesto-kicker", text: "QINGYAN METHOD" });
-    manifesto.createEl("p", { text: "人决定什么值得留下。" });
-    manifesto.createEl("p", { text: "Agent 帮你整理来路。" });
-    const seal = manifesto.createDiv({ cls: "qy-manifesto-seal", text: "本地" });
-    seal.setAttr("aria-label", "本地 Markdown");
-
-    const pulse = manifesto.createDiv({ cls: "qy-manifesto-pulse" });
-    pulse.createSpan({ text: `${files.length} 条知识` });
-    pulse.createSpan({ text: `${inboxFiles.length} 条待整理` });
-    pulse.createSpan({ text: `${projectTasks.length} 个下一步` });
-  }
-
-  createAction(parent, glyph, label, caption, handler) {
+  createNavAction(parent, title, shortcut, handler) {
     const button = parent.createEl("button", {
-      cls: "qy-quick-action",
-      attr: { type: "button", "aria-label": `${label}：${caption}` },
+      cls: "qy-nav-item",
+      attr: { type: "button", "aria-label": shortcut ? `${title} ${shortcut}` : title },
     });
-    button.createSpan({ cls: "qy-action-glyph", text: glyph });
-    const copy = button.createDiv();
-    copy.createEl("strong", { text: label });
-    copy.createSpan({ text: caption });
+    button.createSpan({ text: title });
+    if (shortcut) button.createEl("kbd", { text: shortcut });
     button.addEventListener("click", handler);
   }
 
-  renderKnowledgeCurrent(root, files, inboxFiles, projectTasks) {
+  renderResumeDesk(parent, recent, tasks) {
+    const panel = parent.createEl("section", { cls: "qy-resume-desk" });
+    this.createEditorialHeading(panel, "继续工作", "Recent context");
+
+    const list = panel.createDiv({ cls: "qy-resume-list" });
+    tasks.slice(0, 2).forEach((task) => {
+      this.createResumeRow(list, "下一步", task.text, task.file.basename, () => {
+        this.plugin.openFileWithOptions(task.file, { mode: "source", line: task.line, ch: task.ch }, this.leaf);
+      });
+    });
+    recent.slice(0, 3).forEach((file) => {
+      this.createResumeRow(
+        list,
+        "最近修改",
+        file.basename,
+        `${file.parent?.path || "Vault"} · ${relativeTime(file.stat.mtime)}`,
+        () => this.plugin.openFileWithOptions(file, {}, this.leaf),
+      );
+    });
+    if (!tasks.length && !recent.length) {
+      this.createResumeRow(list, "从这里开始", "写下今天要推进的一件事", "每日记录", () => {
+        this.plugin.openDailyNote(this.leaf);
+      });
+    }
+  }
+
+  createResumeRow(parent, label, title, meta, handler) {
+    const button = parent.createEl("button", {
+      cls: "qy-resume-row",
+      attr: { type: "button", "aria-label": `${label}：${title}` },
+    });
+    const copy = button.createDiv();
+    copy.createSpan({ cls: "qy-resume-label", text: label });
+    copy.createEl("strong", { text: title });
+    copy.createSpan({ text: meta });
+    createIcon(button, "arrow-up-right");
+    button.addEventListener("click", handler);
+  }
+
+  renderReviewDesk(parent, draftSummaries) {
+    if (!draftSummaries.length) return;
+    const review = parent.createEl("section", { cls: "qy-review-desk" });
+    const heading = this.createEditorialHeading(review, "案头草稿", "Agent drafts");
+    heading.createSpan({ cls: "qy-count-badge", text: `${draftSummaries.length} 待审核` });
+
+    draftSummaries.slice(0, 3).forEach((draft, index) => this.createDraftSheet(review, draft, index));
+  }
+
+  createDraftSheet(parent, draft, index) {
+    const article = parent.createEl("article", { cls: "qy-draft-sheet" });
+    article.createSpan({ cls: "qy-draft-index", text: String(index + 1).padStart(2, "0") });
+    const copy = article.createDiv({ cls: "qy-draft-copy" });
+    copy.createEl("h3", { text: draft.file.basename.replace(/\s*[—-]\s*AI 草稿$/, "") });
+    copy.createEl("p", { text: draft.excerpt || "打开草稿，回读来源与建议改动后再决定是否接纳。" });
+    const meta = copy.createDiv({ cls: "qy-draft-meta" });
+    meta.createSpan({ text: draft.sourceLabel ? `来源 · ${draft.sourceLabel}` : `来源 · ${draft.sourceCount} 条引用` });
+    meta.createSpan({ text: draft.changeCount ? `${draft.changeCount} 处建议改动` : "改动待查看" });
+    const actions = copy.createDiv({ cls: "qy-draft-actions" });
+    const review = actions.createEl("button", {
+      cls: "qy-text-action is-primary",
+      attr: { type: "button", "aria-label": `查看并决定 ${draft.file.basename}` },
+    });
+    review.createSpan({ text: "查看与接纳" });
+    createIcon(review, "arrow-right");
+    review.addEventListener("click", () => this.plugin.openFileWithOptions(draft.file, {}, this.leaf));
+    const edit = actions.createEl("button", {
+      cls: "qy-text-action",
+      attr: { type: "button", "aria-label": `编辑草稿 ${draft.file.basename}` },
+    });
+    edit.createSpan({ text: "编辑草稿" });
+    edit.addEventListener("click", () => this.plugin.openFileWithOptions(draft.file, { mode: "source" }, this.leaf));
+  }
+
+  renderEvidenceDesk(parent, sourceFiles, draftSummaries) {
+    const section = parent.createEl("section", { cls: "qy-evidence-desk" });
+    this.createEditorialHeading(section, "来源与边界", "Evidence ledger");
+    const list = section.createDiv({ cls: "qy-evidence-list" });
+    sourceFiles.slice(0, 3).forEach((file) => {
+      const button = list.createEl("button", {
+        cls: "qy-evidence-row",
+        attr: { type: "button", "aria-label": `打开来源 ${file.basename}` },
+      });
+      const copy = button.createDiv();
+      copy.createEl("strong", { text: file.basename });
+      copy.createSpan({ text: relativeTime(file.stat.mtime) });
+      createIcon(button, "arrow-up-right");
+      button.addEventListener("click", () => this.plugin.openFileWithOptions(file, {}, this.leaf));
+    });
+    if (!sourceFiles.length) this.renderEmpty(list, "还没有可回读的来源。 ");
+
+    const boundary = section.createEl("button", {
+      cls: "qy-boundary-note",
+      attr: { type: "button", "aria-label": "打开严格审核说明" },
+    });
+    boundary.createSpan({ cls: "qy-boundary-label", text: "接纳边界" });
+    boundary.createSpan({ text: draftSummaries.length ? `${draftSummaries.length} 份草稿仍与正式知识隔离` : "正式知识未被 Agent 静默覆盖" });
+    boundary.addEventListener("click", () => {
+      const file = this.app.vault.getAbstractFileByPath("指南/严格审核.md");
+      if (file instanceof TFile) this.plugin.openFileWithOptions(file, {}, this.leaf);
+    });
+  }
+
+  createEditorialHeading(parent, title, eyebrow) {
+    const heading = parent.createDiv({ cls: "qy-editorial-heading" });
+    const copy = heading.createDiv();
+    copy.createEl("h2", { text: title });
+    copy.createSpan({ text: eyebrow });
+    return heading;
+  }
+
+  renderKnowledgeCurrent(root, files, inboxFiles, sourceFiles, projectTasks) {
     const current = root.createDiv({ cls: "qy-knowledge-current" });
-    current.createSpan({ cls: "qy-current-label", text: "知识水路" });
-    this.createCurrentStep(current, "收进来", `${inboxFiles.length} 条待整理`);
-    this.createCurrentStep(current, "想清楚", `${files.length} 条可用知识`);
-    this.createCurrentStep(current, "用起来", `${projectTasks.length} 个下一步`);
+    current.createSpan({ cls: "qy-current-label", text: "从线索到接纳" });
+    this.createCurrentStep(current, "01 捕捉", `${inboxFiles.length} 条待整理`);
+    this.createCurrentStep(current, "02 来源", `${sourceFiles.length} 份来路`);
+    this.createCurrentStep(current, "03 判断", `${files.length} 条可用内容`);
+    this.createCurrentStep(current, "04 行动", `${projectTasks.length} 个下一步`);
   }
 
   createCurrentStep(parent, label, value) {
@@ -237,76 +283,39 @@ class QingyanHomepageView extends ItemView {
     step.createSpan({ text: value });
   }
 
-  createSection(parent, title, caption, iconName) {
-    const section = parent.createEl("section", { cls: "qy-dashboard-section" });
-    const heading = section.createDiv({ cls: "qy-section-heading" });
-    createIcon(heading, iconName);
-    const copy = heading.createDiv();
-    copy.createEl("h2", { text: title });
-    copy.createEl("p", { text: caption });
-    return section;
-  }
-
-  renderFileSection(parent, title, caption, files, iconName) {
-    const section = this.createSection(parent, title, caption, iconName);
-    const list = section.createDiv({ cls: "qy-file-list" });
-    if (!files.length) {
-      this.renderEmpty(list, title === "Inbox" ? "Inbox 现在是空的。" : "还没有可显示的内容。");
-      return;
-    }
-    files.forEach((file) => {
-      const button = list.createEl("button", {
-        cls: "qy-file-row",
-        attr: { type: "button", "aria-label": `打开 ${file.basename}` },
-      });
-      const copy = button.createDiv();
-      copy.createEl("strong", { text: file.basename });
-      copy.createSpan({ text: file.parent?.path || "Vault" });
-      button.createSpan({ cls: "qy-file-time", text: relativeTime(file.stat.mtime) });
-      createIcon(button, "arrow-up-right");
-      button.addEventListener("click", () => {
-        if (title === "Inbox") {
-          this.plugin.openFileWithOptions(file, { mode: "source", atEnd: true }, this.leaf);
-        } else {
-          this.plugin.openFileWithOptions(file, {}, this.leaf);
-        }
-      });
-    });
-  }
-
-  renderTaskSection(parent, tasks) {
-    const section = this.createSection(parent, "项目下一步", "只显示尚未完成的动作", "circle-check-big");
-    const list = section.createDiv({ cls: "qy-task-list" });
-    if (!tasks.length) {
-      this.renderEmpty(list, "当前项目没有未完成动作。");
-      return;
-    }
-    tasks.slice(0, 5).forEach((task) => {
-      const button = list.createEl("button", {
-        cls: "qy-task-row",
-        attr: { type: "button", "aria-label": `打开项目 ${task.file.basename}` },
-      });
-      button.createSpan({ cls: "qy-task-check", text: "○" });
-      const copy = button.createDiv();
-      copy.createEl("strong", { text: task.text });
-      copy.createSpan({ text: task.file.basename });
-      button.addEventListener("click", () => this.plugin.openFileWithOptions(task.file, {
-        mode: "source",
-        line: task.line,
-        ch: task.ch,
-      }, this.leaf));
-    });
-  }
-
   renderEmpty(parent, text) {
     const empty = parent.createDiv({ cls: "qy-dashboard-empty" });
     createIcon(empty, "circle-dashed");
     empty.createSpan({ text });
   }
 
+  async summarizeDraft(file) {
+    const content = await this.app.vault.cachedRead(file);
+    const sourceLinks = [...content.matchAll(/\[\[(来源\/[^\]|]+)(?:\|([^\]]+))?\]\]/g)];
+    const sourcePaths = new Set(sourceLinks.map((match) => match[1]));
+    const frontmatter = this.app.metadataCache.getFileCache(file)?.frontmatter || {};
+    const parsedChanges = Number(frontmatter.suggested_changes || frontmatter.suggestedChanges || 0);
+    const excerpt = content
+      .replace(/^---[\s\S]*?---\s*/m, "")
+      .split("\n")
+      .map((line) => line.trim())
+      .find((line) => line
+        && !line.startsWith("#")
+        && !line.startsWith("-")
+        && !line.startsWith(">")
+        && !line.startsWith("[["));
+    return {
+      file,
+      sourceCount: sourcePaths.size,
+      sourceLabel: sourceLinks[0]?.[2] || sourceLinks[0]?.[1]?.replace(/^来源\//, "") || "",
+      changeCount: Number.isFinite(parsedChanges) ? parsedChanges : 0,
+      excerpt: excerpt ? cleanTaskText(excerpt).slice(0, 168) : "",
+    };
+  }
+
   async collectProjectTasks() {
     const projects = this.app.vault.getMarkdownFiles()
-      .filter((file) => file.path.startsWith("Projects/"))
+      .filter((file) => file.path.startsWith("项目/"))
       .sort((a, b) => b.stat.mtime - a.stat.mtime);
     const collected = [];
     for (const file of projects) {
@@ -330,7 +339,7 @@ class QingyanHomepagePlugin extends Plugin {
   async onload() {
     this.registerView(VIEW_TYPE, (leaf) => new QingyanHomepageView(leaf, this));
 
-    this.addRibbonIcon("layout-dashboard", `打开 ${PRODUCT_NAME}`, () => this.activateHomepage());
+    this.addRibbonIcon("book-open", `打开 ${PRODUCT_NAME}`, () => this.activateHomepage());
     this.addCommand({
       id: "open-qingyan-vault-homepage",
       name: `打开 ${PRODUCT_NAME} 动态首页`,
@@ -396,7 +405,11 @@ class QingyanHomepagePlugin extends Plugin {
     const mode = options.mode || "preview";
 
     if (file.extension === "md") {
-      await leaf.openFile(file, { active: true, state: { mode, source: false } });
+      await leaf.setViewState({
+        type: "markdown",
+        state: { file: file.path, mode, source: false },
+        active: true,
+      });
     } else {
       await leaf.openFile(file, { active: true });
     }
@@ -443,14 +456,14 @@ class QingyanHomepagePlugin extends Plugin {
   }
 
   async openDailyNote(sourceLeaf = null) {
-    const folder = "Review/Daily";
+    const folder = "回顾/每日";
     const date = localDateKey(new Date());
     if (!this.app.vault.getAbstractFileByPath(folder)) {
       await this.app.vault.createFolder(folder);
     }
     let file = this.app.vault.getAbstractFileByPath(`${folder}/${date}.md`);
     if (!(file instanceof TFile)) {
-      const template = this.app.vault.getAbstractFileByPath("Templates/每日笔记.md");
+      const template = this.app.vault.getAbstractFileByPath("模板/每日笔记.md");
       const source = template instanceof TFile
         ? await this.app.vault.cachedRead(template)
         : `# ${date}\n\n## 今天\n\n- [ ] 今天只推进：\n`;
@@ -460,7 +473,7 @@ class QingyanHomepagePlugin extends Plugin {
   }
 
   async captureNote(sourceLeaf = null) {
-    const folder = "Inbox";
+    const folder = "收件箱";
     if (!this.app.vault.getAbstractFileByPath(folder)) {
       await this.app.vault.createFolder(folder);
     }

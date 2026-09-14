@@ -6,7 +6,7 @@
     "qingyan-vault"
   ],
   "baseFontSize": 17,
-  "interfaceFontFamily": "-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
-  "textFontFamily": "-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
+  "interfaceFontFamily": "Avenir Next, Hiragino Sans, PingFang SC, Segoe UI, Microsoft YaHei, sans-serif",
+  "textFontFamily": "Hiragino Sans, PingFang SC, Microsoft YaHei, sans-serif",
   "monospaceFontFamily": "SFMono-Regular, Consolas, Liberation Mono, monospace"
 }

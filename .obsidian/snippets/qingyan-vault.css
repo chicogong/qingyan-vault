@@ -48,14 +48,10 @@ body:has(.workspace-leaf.mod-active .starter-home) .mod-sidedock.mod-right-split
   background: color-mix(in srgb, var(--qy-stone) 10%, transparent);
 }
 
-/* File explorer: turn the folder tree into a quiet knowledge shelf. The
-   markers describe the role of each top-level folder; they are not decoration
-   and remain legible when the sidebar is narrow. */
+/* The file explorer represents physical Markdown folders. Keep its native
+   folder grammar; workflow semantics live in the first-party homepage. */
 .workspace-leaf-content[data-type="file-explorer"] .nav-files-container {
-  padding: 0.65rem 0.45rem 2.5rem;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--qy-paper) 72%, transparent), transparent 10rem),
-    var(--background-secondary);
+  padding: 0.65rem 0.42rem 2.5rem;
 }
 
 .workspace-leaf-content[data-type="file-explorer"] .nav-folder.mod-root > .nav-folder-children {
@@ -63,73 +59,41 @@ body:has(.workspace-leaf.mod-active .starter-home) .mod-sidedock.mod-right-split
 }
 
 .workspace-leaf-content[data-type="file-explorer"] .nav-folder.mod-root > .nav-folder-children > .nav-folder {
-  margin-block: 0.15rem;
+  margin-block: 0.08rem;
 }
 
 .workspace-leaf-content[data-type="file-explorer"] .nav-folder.mod-root > .nav-folder-children > .nav-folder > .nav-folder-title {
-  min-height: 2rem;
-  border: 1px solid transparent;
-  border-radius: 4px 12px 4px 10px;
+  min-height: 1.8rem;
+  border-radius: 0.38rem;
   color: var(--qy-ink);
-  font-size: 0.76rem;
-  font-weight: 720;
+  font-size: 0.75rem;
+  font-weight: 630;
 }
 
 .workspace-leaf-content[data-type="file-explorer"] .nav-folder.mod-root > .nav-folder-children > .nav-folder > .nav-folder-title:hover,
 .workspace-leaf-content[data-type="file-explorer"] .nav-folder.mod-root > .nav-folder-children > .nav-folder > .nav-folder-title:focus-within {
-  border-color: var(--qy-line);
-  background: color-mix(in srgb, var(--qy-paper-deep) 58%, transparent);
+  background: var(--background-modifier-hover);
 }
 
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title-content {
-  display: flex;
-  min-width: 0;
-  align-items: center;
+.workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder-collapse-indicator, .tree-item-icon.collapse-icon) {
+  color: var(--text-muted);
+  opacity: 0.8;
 }
-
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title-content::before {
-  display: inline-grid;
-  width: 1.42rem;
-  height: 1.42rem;
-  flex: 0 0 1.42rem;
-  margin-right: 0.42rem;
-  border: 1px solid var(--qy-line);
-  border-radius: 50%;
-  color: var(--qy-muted);
-  content: "·";
-  font-family: var(--qy-display);
-  font-size: 0.64rem;
-  line-height: 1;
-  place-items: center;
-}
-
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Inbox"] .nav-folder-title-content::before { color: var(--qy-seal); content: "收"; }
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Sources"] .nav-folder-title-content::before { color: var(--qy-gold); content: "源"; }
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Notes"] .nav-folder-title-content::before { color: var(--qy-stone); content: "知"; }
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Projects"] .nav-folder-title-content::before { color: var(--qy-seal); content: "事"; }
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="MOCs"] .nav-folder-title-content::before { color: var(--qy-stone); content: "图"; }
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Review"] .nav-folder-title-content::before { color: var(--qy-gold); content: "省"; }
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Agent"] .nav-folder-title-content::before { color: var(--qy-seal); content: "AI"; font-family: var(--font-monospace); font-size: 0.52rem; }
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Guides"] .nav-folder-title-content::before { color: var(--qy-stone); content: "引"; }
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Templates"] .nav-folder-title-content::before { color: var(--qy-muted); content: "模"; }
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Canvas"] .nav-folder-title-content::before { color: var(--qy-stone); content: "绘"; }
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Archive"] .nav-folder-title-content::before { color: var(--qy-muted); content: "藏"; }
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title[data-path="Attachments"] .nav-folder-title-content::before { color: var(--qy-muted); content: "附"; }
 
 .workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-file-title {
   min-height: 1.78rem;
-  color: var(--qy-muted);
+  color: var(--text-muted);
   font-size: 0.74rem;
 }
 
 .workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-file-title:hover,
 .workspace-leaf-content[data-type="file-explorer"] .nav-folder-children .nav-file-title:focus-within {
-  color: var(--qy-ink);
-  background: color-mix(in srgb, var(--qy-paper-deep) 48%, transparent);
+  color: var(--text-normal);
+  background: var(--background-modifier-hover);
 }
 
 /* Keep project governance in Git without turning it into daily navigation. */
-.nav-folder-title[data-path="docs"],
+.nav-folder-title[data-path="维护"],
 .nav-folder-title[data-path="dist"],
 .nav-file-title[data-path="AGENTS.md"],
 .nav-file-title[data-path="CLAUDE.md"],
@@ -139,7 +103,7 @@ body:has(.workspace-leaf.mod-active .starter-home) .mod-sidedock.mod-right-split
 .nav-file-title[data-path="LICENSE"],
 .nav-file-title[data-path="README.md"],
 .nav-file-title[data-path="README.en.md"],
-.nav-file-title[data-path="ROADMAP.md"],
+.nav-file-title[data-path="规划.md"],
 .nav-file-title[data-path="SECURITY.md"],
 .nav-file-title[data-path="THIRD_PARTY_NOTICES.md"],
 .nav-file-title[data-path="VERSION"] {

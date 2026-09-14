@@ -4,7 +4,7 @@
     "type": "split",
     "children": [
       {
-        "id": "starter-tabs",
+        "id": "starter-main-tabs",
         "type": "tabs",
         "children": [
           {
@@ -17,8 +17,8 @@
                 "mode": "preview",
                 "source": false
               },
-              "icon": "lucide-file",
-              "title": "Home"
+              "icon": "lucide-file-text",
+              "title": "Qingyan Vault"
             }
           }
         ]
@@ -63,7 +63,7 @@
                 "sortOrder": "alphabetical"
               },
               "icon": "lucide-search",
-              "title": "Search"
+              "title": "搜索"
             }
           },
           {
@@ -118,7 +118,6 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Home.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -179,6 +178,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "qingyan-homepage:打开 Qingyan Vault": false,
       "bases:新建数据库": false,
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
@@ -191,30 +191,33 @@
   "active": "starter-home",
   "lastOpenFiles": [
     "Home.md",
-    "开始使用.md",
+    "项目/纸上天文台.md",
+    "Agent/草稿/温柔入口降低决策负担 — AI 草稿.md",
     "知识总览.base",
+    "开始使用.md",
+    "来源/纸上天文台访谈.md",
+    "知识/温柔入口降低决策负担.md",
     "Agent/README.md",
     "Agent/交接/README.md",
     "Agent/反馈/README.md",
     "Agent/草稿/README.md",
-    "Archive/README.md",
-    "Attachments/README.md",
-    "Canvas/夜航花园地图.canvas",
-    "Guides/插件与主题.md",
-    "Guides/用户使用手册.md",
-    "Templates/每周回顾.md",
-    "Templates/来源.md",
+    "归档/README.md",
+    "附件/README.md",
+    "白板/夜航花园地图.canvas",
+    "指南/插件与主题.md",
+    "指南/用户使用手册.md",
+    "模板/每周回顾.md",
+    "模板/来源.md",
     "README.md",
     "THIRD_PARTY_NOTICES.md",
-    "Guides/案例与设计取舍.md",
-    "Review/每日与每周节奏.md",
-    "Guides/把它变成你的.md",
-    "MOCs/平静体验设计地图.md",
-    "README.en.md",
+    "指南/案例与设计取舍.md",
+    "回顾/每日与每周节奏.md",
+    "指南/把它变成你的.md",
+    "知识地图/平静体验设计地图.md",
     "Agent/草稿",
     "Agent/反馈",
     "Agent/交接",
     "Agent",
-    "Guides"
+    "指南"
   ]
 }

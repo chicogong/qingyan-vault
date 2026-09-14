@@ -1,9 +1,9 @@
 {
   "showInlineTitle": false,
   "alwaysUpdateLinks": true,
-  "attachmentFolderPath": "Attachments",
+  "attachmentFolderPath": "附件",
   "newFileLocation": "folder",
-  "newFileFolderPath": "Inbox",
+  "newFileFolderPath": "收件箱",
   "newLinkFormat": "shortest",
   "propertiesInDocument": "hidden",
   "readableLineLength": true,
@@ -11,7 +11,7 @@
   "userIgnoreFilters": [
     ".github/",
     ".starter-tools/",
-    "docs/",
+    "维护/",
     "dist/",
     "AGENTS.md",
     "CLAUDE.md",
@@ -21,7 +21,7 @@
     "LICENSE",
     "README.md",
     "README.en.md",
-    "ROADMAP.md",
+    "规划.md",
     "SECURITY.md",
     "THIRD_PARTY_NOTICES.md",
     "VERSION"
